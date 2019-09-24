@@ -1,0 +1,10 @@
+<h1>Common Words</h1>
+{% if common_words %}
+<ul>
+{% for word in common_words %}
+    <li>{{ word }}</li>
+{% endfor %}
+</ul>
+{% else %}
+<p>There are not common words yet.</p>
+{% endif %}

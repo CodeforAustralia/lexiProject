@@ -1,0 +1,71 @@
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1>Lexi</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md section">
+            <div class="col section-title">
+                <h2>Text to validate</h2>
+            </div>
+            <div class="w-100"></div>
+            <div class="col section-description">
+                <textarea class="form-control" name="input" id="textToCheck" rows="8">
+Please be advised that disruptions are expected to affect peak-hour traffic and public transport tonight, with a climate change protest planned in the CBD.
+
+Protestors are expected to meet at the State Library on Swanston Street at 5pm, before separating to a series of locations in the CBD to block foot and road traffic. The protest is expected to finish at 7pm.
+
+Victoria Police are aware of the protest and are calling on people to be patient, plan their journey, and allow extra time for their commute where possible.
+
+Please speak to your manager if you think you may be impacted by the protest.</textarea>
+                <div class="col">
+                    <button type="submit" class="btn btn-outline" onclick="checkText(1000);">1k</button>
+                    <button type="button" class="btn btn-outline" onclick="checkText(2000);">2k</button>
+                    <button type="button" class="btn" disabled="disabled">5k</button>
+                    <button type="button" class="btn" disabled="disabled">10k</button>
+                    <button type="button" class="btn" disabled="disabled">20k</button>
+                    <button type="button" class="btn" disabled="disabled">Cenitex</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md section">
+            <div class="col section-title">
+            <h2>Results</h2>
+            </div>
+            <div class="w-100"></div>
+            <div class="col section-description">
+                <p class="lead" id="commonWords"></p>
+                <p class="lead" id="cenitexWords"></p>
+                <p class="lead" id="notCommonWords"></p>
+                <p class="lead" id="words"></p>
+                <p class="lead" id="message"></p>
+                <p class="lead" id="percentage"></p>
+            </div>
+        </div>
+        <div class="w-100"></div>
+        <div class="col-md section">
+            <div class="col section-title">
+                <h2>Text result</h2>
+            </div>
+            <div class="w-100"></div>
+            <div class="col section-description">
+                <p class="lead" id="checkedMessage"></p>
+            </div>
+        </div>
+        <div class="col-md section">
+            <div class="col section-title">
+                <h2>Chart</h2>
+            </div>
+            <div class="w-100"></div>
+            <div class="col section-description">
+                <textarea class="form-control" name="input" id="textToCheck" rows="8"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <a href="/lexi/commonwords/">Common Words</a>
+        <a href="/lexi/businesswords/">Business Words</a>
+        <a href="/lexi/messageanalysis/">Message Analysis</a>
+    </div>
+</div>

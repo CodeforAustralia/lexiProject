@@ -1,0 +1,10 @@
+<h1>Business Words</h1>
+{% if business_words %}
+<ul>
+{% for word in business_words %}
+    <li>{{ word }}</li>
+{% endfor %}
+</ul>
+{% else %}
+<p>There are not business words yet.</p>
+{% endif %}

@@ -1,0 +1,59 @@
+<div class="container">
+        <div class="row">
+            <div class="col">
+                <h1>Lexi</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md section">
+                <div class="col section-title">
+                    <h2>Text to validate</h2>
+                </div>
+                <div class="w-100"></div>
+                <div class="col section-description">
+                    <p class="lead" id="originalMessage">{{ analysis.input_text }}</p>
+                    <div class="col">
+                        <button type="submit" class="btn" disabled="disabled">1k</button>
+                        <button type="button" class="btn" disabled="disabled">2k</button>
+                        <button type="button" class="btn" disabled="disabled">5k</button>
+                        <button type="button" class="btn" disabled="disabled">10k</button>
+                        <button type="button" class="btn" disabled="disabled">20k</button>
+                        <button type="button" class="btn" disabled="disabled">Cenitex</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md section">
+                <div class="col section-title">
+                <h2>Results</h2>
+                </div>
+                <div class="w-100"></div>
+                <div class="col section-description">
+                    <p class="lead" id="commonWords"></p>
+                    <p class="lead" id="cenitexWords"></p>
+                    <p class="lead" id="notCommonWords"></p>
+                    <p class="lead" id="words"></p>
+                    <p class="lead" id="message"></p>
+                    <p class="lead" id="percentage"></p>
+                </div>
+            </div>
+            <div class="w-100"></div>
+            <div class="col-md section">
+                <div class="col section-title">
+                    <h2>Text result</h2>
+                </div>
+                <div class="w-100"></div>
+                <div class="col section-description">
+                    <p class="lead" id="checkedMessage"></p>
+                </div>
+            </div>
+            <div class="col-md section">
+                <div class="col section-title">
+                    <h2>Chart</h2>
+                </div>
+                <div class="w-100"></div>
+                <div class="col section-description">
+                    <textarea class="form-control" name="input" id="textToCheck" rows="8"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>

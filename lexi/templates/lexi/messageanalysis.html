@@ -1,0 +1,10 @@
+<h1>Message Analysis</h1>
+{% if message_analysis %}
+<ul>
+{% for analysis in message_analysis %}
+    <li>{{ analysis.input_text }} - {{ analysis.total_words }}</li>
+{% endfor %}
+</ul>
+{% else %}
+<p>There are not message analysis yet.</p>
+{% endif %}
