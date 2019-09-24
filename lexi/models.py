@@ -24,7 +24,7 @@ class Common_Word(models.Model):
 
 class Business_Word(models.Model):
     word = models.CharField(primary_key=True, max_length = 20)
-    times = models.IntegerField(default=1)
+    times = models.IntegerField(default=0)
     
     def __str__(self):
         return self.word
