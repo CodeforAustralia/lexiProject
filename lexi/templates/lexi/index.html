@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <div class="container">
     <div class="row">
         <div class="col">
@@ -20,12 +21,14 @@ Victoria Police are aware of the protest and are calling on people to be patient
 
 Please speak to your manager if you think you may be impacted by the protest.</textarea>
                 <div class="col">
-                    <button type="submit" class="btn btn-outline" onclick="checkText(1000);">1k</button>
-                    <button type="button" class="btn btn-outline" onclick="checkText(2000);">2k</button>
-                    <button type="button" class="btn" disabled="disabled">5k</button>
-                    <button type="button" class="btn" disabled="disabled">10k</button>
-                    <button type="button" class="btn" disabled="disabled">20k</button>
-                    <button type="button" class="btn" disabled="disabled">Cenitex</button>
+                    <form action="" method="post">
+                        <button type="submit" class="btn btn-outline" onclick="checkText(1000);">1k</button> <!--ToDo: Give the color styles-->
+                        <button type="submit" class="btn btn-outline" onclick="checkText(2000);">2k</button>
+                        <button type="button" class="btn" disabled="disabled">5k</button>
+                        <button type="button" class="btn" disabled="disabled">10k</button>
+                        <button type="button" class="btn" disabled="disabled">20k</button>
+                        <button type="button" class="btn" disabled="disabled">Cenitex</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -63,9 +66,8 @@ Please speak to your manager if you think you may be impacted by the protest.</t
             </div>
         </div>
     </div>
-    <div class="row">
-        <a href="/lexi/commonwords/">Common Words</a>
-        <a href="/lexi/businesswords/">Business Words</a>
-        <a href="/lexi/messageanalysis/">Message Analysis</a>
+    <div class="card-footer text-muted">
+        <!--ToDo: Footer here! Should be a separate html-->
+        <a href="/lexi/commonwords/">Common Words</a> | <a href="/lexi/businesswords/">Business Words</a> | <a href="/lexi/messageanalysis/">Message Analysis</a>
     </div>
 </div>

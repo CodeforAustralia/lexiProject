@@ -29,3 +29,6 @@ def detail(request, analysis_id):
     return render(request, 'lexi/detail.html', {
         'analysis': analysis
     })
+
+def analyzeText(request, threshold):
+    print(STATIC_URL)
