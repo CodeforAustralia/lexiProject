@@ -8,3 +8,7 @@
 {% else %}
 <p>There are not business words yet.</p>
 {% endif %}
+<div class="card-footer text-muted">
+    <!--ToDo: Footer here! Should be a separate html-->
+    <a href="{% url 'lexi:index' %}">Home</a> | <a href="{% url 'lexi:common words' %}">Common Words</a> | <a href="{% url 'lexi:business words' %}">Business Words</a> | <a href="{% url 'lexi:message analysis' %}">Message Analysis</a>
+</div>
