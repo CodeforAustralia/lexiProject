@@ -13,5 +13,5 @@ urlpatterns = [
     #ex: /lexi/messageanalysis/
     path('messageanalysis/', views.messageAnalysis, name='message analysis'),
     #ex: /lexi/messageanalysis/
-    path('messageanalysis/<int:analysis_id>/', views.detail, name='detail'),
+    path('messageanalysis/<int:analysis_id>/', views.detail, name='analysis detail'),
 ]

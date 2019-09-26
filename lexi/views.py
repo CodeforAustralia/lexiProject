@@ -1,10 +1,39 @@
+import os
+#ToDo: Move all Business logic to another python file / folder.
 from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
 from .models import Message_Analysis, Business_Word, Common_Word
 
+def splitByWholeSentences(paragraph):
+    return paragraph
+
+def splitByParagraphs(text):
+    checked_message = ""
+    paragraphs = text.split("\n\r\n")
+    print(len(paragraphs))
+    for p in paragraphs:
+        checked_paragraph = splitByWholeSentences(p)
+        checked_message += checked_paragraph
+    return checked_message
+
 def index(request):
-    return render(request, 'lexi/index.html')
+    inputText = ""
+    if('threshold' in request.POST):
+        inputText = request.POST.__getitem__('inputText')
+        threshold = request.POST.__getitem__('threshold')
+        #ToDo: Change the way I read the file
+        txtFilepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static/20k.txt")
+        txtFile = open(txtFilepath, "r")
+        mostCommonWords = txtFile.read().split(",")
+        txtFile.close()
+        print(len(mostCommonWords[:int(threshold)]))
+        print(splitByParagraphs(inputText))
+    else:
+        print("No threshold")
+    return render(request, 'lexi/index.html', {
+        'checked_message': splitByParagraphs(inputText)
+    })
 
 def commonWords(request):
     common_words = Common_Word.objects.order_by('-times')
@@ -29,6 +58,3 @@ def detail(request, analysis_id):
     return render(request, 'lexi/detail.html', {
         'analysis': analysis
     })
-
-def analyzeText(request, threshold):
-    print(STATIC_URL)
