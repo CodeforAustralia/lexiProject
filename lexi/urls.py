@@ -4,6 +4,7 @@ from .import views
 
 app_name = 'lexi'
 urlpatterns = [
+    #ToDo: Define Generic Views (https://docs.djangoproject.com/en/2.2/intro/tutorial04/)
     #ex: /lexi/
     path('', views.index, name='index'),
     #ex: /lexi/commonwords/

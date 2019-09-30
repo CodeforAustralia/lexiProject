@@ -1,4 +1,6 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+{% load static  %}
+<link rel="stylesheet" href="{% static 'lexi/style.css' %}">
 <div class="container">
     <div class="row">
         <div class="col">
@@ -14,15 +16,17 @@
             <div class="col section-description">
                 <form action="{% url 'lexi:index' %}" method="post">
                 {%csrf_token%}
-                    <textarea class="form-control" name="inputText" id="textToCheck" rows="8">
+                    <textarea class="form-control" name="inputText" id="textToCheck" rows="8">{{ original_message }}</textarea>
+                    <!--
 Please be advised that disruptions are expected to affect peak-hour traffic and public transport tonight, with a climate change protest planned in the CBD.
 
 Protestors are expected to meet at the State Library on Swanston Street at 5pm, before separating to a series of locations in the CBD to block foot and road traffic. The protest is expected to finish at 7pm.
 
 Victoria Police are aware of the protest and are calling on people to be patient, plan their journey, and allow extra time for their commute where possible.
 
-Please speak to your manager if you think you may be impacted by the protest.</textarea>
+Please speak to your manager if you think you may be impacted by the protest.-->
                     <div class="col">
+                        <!--Add color styles as span classes-->
                         <button type="submit" class="btn btn-outline" name="threshold" value="1000">1k</button> <!--ToDo: Give the color styles-->
                         <button type="submit" class="btn btn-outline" name="threshold" value="2000">2k</button>
                         <button type="button" class="btn" disabled="disabled">5k</button>
@@ -54,7 +58,7 @@ Please speak to your manager if you think you may be impacted by the protest.</t
             </div>
             <div class="w-100"></div>
             <div class="col section-description">
-                <p class="lead" id="checkedMessage">{{ checked_message }}</p>
+                <p class="lead" id="checkedMessage">{{ checked_message|safe }}</p>
             </div>
         </div>
         <div class="col-md section">

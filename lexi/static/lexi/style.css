@@ -1,0 +1,29 @@
+.uncommon {
+    color: red;
+}
+
+.twentyK {
+    background-color: red;
+}
+
+.tenK {
+    background-color: blue;
+}
+
+.fiveK {
+    background-color: violet;
+}
+
+.twoK {
+    background-color: aqua;
+}
+
+.oneK {
+    background-color: greenyellow;
+}
+
+.btn:focus {
+    background: greenyellow;
+    /*box-shadow: 0 2px gray;*/
+    transform: translateY(5px);
+}
