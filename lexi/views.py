@@ -36,7 +36,7 @@ def splitByWords(simpleSentence):
             whereIs = lookForWord(w.lower())
             print(w + " - " + whereIs)
             #if w.lower() in mostCommonWords[:int(threshold)]:
-            checked_simple_sentence += '<span class=\''+ whereIs +'\'>' + w + '</span> '
+            checked_simple_sentence += '<span class=\'badge word '+ whereIs +'\'>' + w + '</span> '
             #else:
             #    checked_simple_sentence += '<span class=\'uncommon\'>' + w + '</span> '
     return checked_simple_sentence

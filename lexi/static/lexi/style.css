@@ -3,23 +3,27 @@
 }
 
 .twentyK {
-    background-color: red;
+    background-color: #e50046;
 }
 
 .tenK {
-    background-color: blue;
+    background-color: #e65a03;
 }
 
 .fiveK {
-    background-color: violet;
+    background-color: #cc9000;
 }
 
 .twoK {
-    background-color: aqua;
+    background-color: #9abd00;
 }
 
 .oneK {
-    background-color: greenyellow;
+    background-color: #2fe257;
+}
+
+.word {
+    font-weight: normal;
 }
 
 .btn:focus {
