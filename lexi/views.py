@@ -1,13 +1,38 @@
-import os
+import os, thesaurus, urllib.request, json, warnings
 #ToDo: Move all Business logic to another python file / folder.
 from django.shortcuts import render, get_object_or_404
 from django.utils import html
+from pprint import pprint
+from bs4 import BeautifulSoup
 
 # Create your views here.
 from .models import Message_Analysis, Business_Word, Common_Word
 
 mostCommonWords = []
 threshold = 0
+url = 'http://www.thesaurus.com/browse/'
+
+def lookForSynonyms(word):
+    try:
+        synonyms = []
+        content = urllib.request.urlopen(url + word)
+        data = content.read().decode('utf-8')
+        content.close()
+        soup = BeautifulSoup(data, 'html.parser')
+        results = soup.find_all("script")
+        result = results[22].string #ToDo: Fix or improve this!
+        json_txt = result.replace("window.INITIAL_STATE = ","").replace("};","}")
+        structure = json.loads(json_txt)
+        for synonym in structure['searchData']['tunaApiData']['posTabs']:
+            for term in synonym['synonyms']:
+                if int(term['similarity']) == 100 and word in mostCommonWords[:2000]:
+                    synonyms.append(term['term'])
+        return synonyms
+    except urllib.error.HTTPError:
+        #raise(urllib.error.HTTPError)
+        warnings.warn(str(urllib.error.HTTPError))
+    except Exception as e1:
+        print(f"There is an error in lookForSynonyms: {str(e1)}")
 
 def lookForWord(word):
     #ToDo: Include Keras text preprocessing for words with an character stick (i.e. ?)
@@ -30,11 +55,17 @@ def splitByWords(simpleSentence):
     checked_simple_sentence = ""
     words = simpleSentence.split(" ")
     for w in words:
-        if (w != ""):
+        if (w not in ("", " ", "\n", "\r")):
             #global mostCommonWords
             #global threshold
             whereIs = lookForWord(w.lower())
-            print(w + " - " + whereIs)
+            if whereIs not in ("oneK", "twoK"):
+                print(w + " - " + whereIs)
+                print("Synonyms for " + w)
+                synonyms = lookForSynonyms(w.lower())
+                if synonyms:    #ToDo: Check Generator Expressions (https://www.python.org/dev/peps/pep-0289/)
+                    for synonym in synonyms:
+                        print(synonym)
             #if w.lower() in mostCommonWords[:int(threshold)]:
             checked_simple_sentence += '<span class=\'badge word '+ whereIs +'\'>' + w + '</span> '
             #else:
