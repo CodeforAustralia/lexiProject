@@ -1,4 +1,4 @@
-import os, thesaurus, urllib.request, json, warnings
+import os, urllib.request, json, warnings
 #ToDo: Move all Business logic to another python file / folder.
 from django.shortcuts import render, get_object_or_404
 from django.utils import html
@@ -11,9 +11,11 @@ from .models import Message_Analysis, Business_Word, Common_Word
 mostCommonWords = []
 threshold = 0
 url = 'http://www.thesaurus.com/browse/'
+suggestions = ''
 
 def lookForSynonyms(word):
     try:
+        how_many_synonyms = 0
         synonyms = []
         content = urllib.request.urlopen(url + word)
         data = content.read().decode('utf-8')
@@ -23,14 +25,22 @@ def lookForSynonyms(word):
         result = results[22].string #ToDo: Fix or improve this!
         json_txt = result.replace("window.INITIAL_STATE = ","").replace("};","}")
         structure = json.loads(json_txt)
+        synonyms.clear()
         for synonym in structure['searchData']['tunaApiData']['posTabs']:
             for term in synonym['synonyms']:
                 if int(term['similarity']) == 100 and word in mostCommonWords[:2000]:
                     synonyms.append(term['term'])
+                    how_many_synonyms += 1
+        if how_many_synonyms == 0:
+            synonyms.append("Not common synonyms.")
         return synonyms
-    except urllib.error.HTTPError:
-        #raise(urllib.error.HTTPError)
-        warnings.warn(str(urllib.error.HTTPError))
+    except urllib.error.HTTPError as err:
+        if err.code == 404:
+            print(word + " was not found.")
+            synonyms.append(word + " was not found at Thesaurus.")
+            return synonyms
+        else:
+            raise
     except Exception as e1:
         print(f"There is an error in lookForSynonyms: {str(e1)}")
 
@@ -56,16 +66,20 @@ def splitByWords(simpleSentence):
     words = simpleSentence.split(" ")
     for w in words:
         if (w not in ("", " ", "\n", "\r")):
-            #global mostCommonWords
-            #global threshold
             whereIs = lookForWord(w.lower())
             if whereIs not in ("oneK", "twoK"):
-                print(w + " - " + whereIs)
-                print("Synonyms for " + w)
+                print(w + " - (" + whereIs + ")")
                 synonyms = lookForSynonyms(w.lower())
                 if synonyms:    #ToDo: Check Generator Expressions (https://www.python.org/dev/peps/pep-0289/)
+                    global suggestions
+                    suggestions += '<section>'
+                    suggestions += '<h3>' + w + '</h3>'
+                    suggestions += '<ul>'
                     for synonym in synonyms:
-                        print(synonym)
+                        #print(synonym)
+                        suggestions += '<li>' + synonym + '</li>'
+                    suggestions += '</ul>'
+                    suggestions += '</section>'
             #if w.lower() in mostCommonWords[:int(threshold)]:
             checked_simple_sentence += '<span class=\'badge word '+ whereIs +'\'>' + w + '</span> '
             #else:
@@ -106,10 +120,13 @@ def index(request):
         global mostCommonWords
         mostCommonWords = txtFile.read().split(",")
         txtFile.close()
+        global suggestions
+        suggestions = ''
         print(len(mostCommonWords[:int(threshold)]))
         return render(request, 'lexi/index.html', {
             'original_message': inputText,
-            'checked_message': splitByParagraphs(inputText)
+            'checked_message': splitByParagraphs(inputText),
+            'suggestions': suggestions
         })
     else:
         print("No threshold")
