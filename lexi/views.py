@@ -28,7 +28,7 @@ def lookForSynonyms(word):
         synonyms.clear()
         for synonym in structure['searchData']['tunaApiData']['posTabs']:
             for term in synonym['synonyms']:
-                if int(term['similarity']) == 100 and word in mostCommonWords[:2000]:
+                if int(term['similarity']) == 100 and word in mostCommonWords:
                     synonyms.append(term['term'])
                     how_many_synonyms += 1
         if how_many_synonyms == 0:
