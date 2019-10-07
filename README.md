@@ -10,7 +10,7 @@ As mentioned above, Lexi is a Django web app. So there are some preconditions we
 
 ### Install Python and Django
 
-- [Python 3]([https://www.python.org/](https://www.python.org/)) needs to be installed in the laptop / server you are using to run Lexi. Make sure you have **Python 3.7.4+**.
+- [Python 3](https://www.python.org/) needs to be installed in the laptop / server you are using to run Lexi. Make sure you have **Python 3.7.4+**.
 	> If you already have Python 3 installed, check its version.
     `$	python --version`
 
