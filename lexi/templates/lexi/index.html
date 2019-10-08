@@ -1,22 +1,53 @@
+<link href="https://fonts.googleapis.com/css?family=Dancing+Script&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 {% load static  %}
 <link rel="stylesheet" href="{% static 'lexi/style.css' %}">
-<div class="container">
-    <div class="row">
-        <div class="col">
-            <h1>Lexi</h1>
+<div class="container-fluid">
+    <div class="card-header">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" id="lexi-title" href="{% url 'lexi:index' %}">Lexi</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">How it works <span class="sr-only">(current)</span></a>
+                    </li>
+                </ul>
+                <form class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </form>
+            </div>
+        </nav>
+    </div>
+    <div class="row p-5">
+        <div class="col-sm">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pharetra justo nibh, ac congue risus auctor ut. Praesent cursus magna enim, et ornare enim dictum nec. Morbi pretium posuere arcu eu pharetra. Vestibulum porta metus augue, in luctus metus tempus in. Vestibulum sed quam vitae purus pulvinar cursus et id ante. Cras efficitur at sem ut fringilla. Cras iaculis augue suscipit erat pulvinar, sit amet pretium velit congue. Aenean tristique et libero sed posuere. Ut sem urna, volutpat eu cursus ut, varius non massa. Aenean imperdiet magna ac tellus finibus eleifend. Duis viverra massa ante, et dictum elit finibus eu. Mauris accumsan arcu a ligula imperdiet, sit amet pulvinar velit dignissim.
+
+                Proin dapibus turpis in lacinia hendrerit. Vestibulum nec nulla vitae tortor aliquam vulputate. Vivamus semper finibus elit, venenatis sollicitudin orci aliquet sit amet. Suspendisse eu blandit enim. Pellentesque ullamcorper facilisis porttitor. Curabitur felis erat, luctus in sollicitudin in, semper ut arcu. Sed vestibulum urna porta nisi cursus rutrum. Curabitur id diam ex.
+        </div>
+        <div class="col-sm">
+                <img class="px-5" src="https://dummyimage.com/400x400/000/fff" alt="">
         </div>
     </div>
-    <div class="row">
-        <div class="col-md section">
-            <div class="col section-title">
+    <div class="row py">
+        <div class="col-md">
+            <h2>Instructions to follow</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pharetra justo nibh, ac congue risus auctor ut. Praesent cursus magna enim, et ornare enim dictum nec. Morbi pretium posuere arcu eu pharetra. Vestibulum porta metus augue, in luctus metus tempus in. Vestibulum sed quam vitae purus pulvinar cursus et id ante. Cras efficitur at sem ut fringilla. Cras iaculis augue suscipit erat pulvinar, sit amet pretium velit congue. Aenean tristique et libero sed posuere. Ut sem urna, volutpat eu cursus ut, varius non massa. Aenean imperdiet magna ac tellus finibus eleifend. Duis viverra massa ante, et dictum elit finibus eu. Mauris accumsan arcu a ligula imperdiet, sit amet pulvinar velit dignissim.</p>
+            <div class="alert alert-danger" role="alert">{{ error_message }}</div>
+        </div>
+        <div class="w-100"></div>
+        <div class="col-md">
+            <!--div class="col">
                 <h2>Text to validate</h2>
-            </div>
+            </div-->
             <div class="w-100"></div>
-            <div class="col section-description">
-                <form action="{% url 'lexi:index' %}" method="post">
+            <div class="col">
+                <form action="{% url 'lexi:analysis' %}" method="post">
                 {%csrf_token%}
-                    <textarea class="form-control" name="inputText" id="textToCheck" rows="8">{{ original_message }}</textarea>
+                    <textarea class="form-control my-4" name="inputText" id="textToCheck" rows="8">{{ original_message }}</textarea>
                     <!--
 Please be advised that disruptions are expected to affect peak-hour traffic and public transport tonight, with a climate change protest planned in the CBD.
 
@@ -37,43 +68,12 @@ Please speak to your manager if you think you may be impacted by the protest.-->
                 </form>
             </div>
         </div>
-        <div class="col-md section">
-            <div class="col section-title">
-            <h2>Results</h2>
-            </div>
-            <div class="w-100"></div>
-            <div class="col section-description">
-                <p class="lead" id="commonWords"></p>
-                <p class="lead" id="cenitexWords"></p>
-                <p class="lead" id="notCommonWords"></p>
-                <p class="lead" id="words"></p>
-                <p class="lead" id="message"></p>
-                <p class="lead" id="percentage"></p>
-                <div id="suggestions">{{ suggestions|safe }}</div>
-            </div>
-        </div>
-        <div class="w-100"></div>
-        <div class="col-md section">
-            <div class="col section-title">
-                <h2>Text result</h2>
-            </div>
-            <div class="w-100"></div>
-            <div class="col section-description">
-                <p class="lead" id="checkedMessage">{{ checked_message|safe }}</p>
-            </div>
-        </div>
-        <div class="col-md section">
-            <div class="col section-title">
-                <h2>Chart</h2>
-            </div>
-            <div class="w-100"></div>
-            <div class="col section-description">
-                <textarea class="form-control" name="input" id="textToCheck" rows="8"></textarea>
-            </div>
-        </div>
     </div>
     <div class="card-footer text-muted">
         <!--ToDo: Footer here! Should be a separate html-->
         <a href="{% url 'lexi:index' %}">Home</a> | <a href="{% url 'lexi:common words' %}">Common Words</a> | <a href="{% url 'lexi:business words' %}">Business Words</a> | <a href="{% url 'lexi:message analysis' %}">Message Analysis</a>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>

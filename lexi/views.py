@@ -109,9 +109,13 @@ def splitByParagraphs(text):
     return checked_message
 
 def index(request):
+    return render(request, 'lexi/index.html')
+
+def analysis(request):
     inputText = ""
-    if('threshold' in request.POST):
-        inputText = request.POST.__getitem__('inputText')
+    #print(request.POST.__getitem__('inputText'))
+    inputText = request.POST.__getitem__('inputText')
+    if('threshold' in request.POST and inputText != ""):
         global threshold
         threshold = request.POST.__getitem__('threshold')
         #ToDo: Change the way I read the file
@@ -123,14 +127,16 @@ def index(request):
         global suggestions
         suggestions = ''
         print(len(mostCommonWords[:int(threshold)]))
-        return render(request, 'lexi/index.html', {
+        return render(request, 'lexi/analysis.html', {
             'original_message': inputText,
             'checked_message': splitByParagraphs(inputText),
             'suggestions': suggestions
         })
     else:
-        print("No threshold")
-        return render(request, 'lexi/index.html')
+        print("There is not a text to analyze")
+        return render(request, 'lexi/index.html', {
+            "error_message": "There is not a text to analyze."
+        })
 
 def commonWords(request):
     common_words = Common_Word.objects.order_by('-times')

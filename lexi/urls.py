@@ -7,6 +7,8 @@ urlpatterns = [
     #ToDo: Define Generic Views (https://docs.djangoproject.com/en/2.2/intro/tutorial04/)
     #ex: /lexi/
     path('', views.index, name='index'),
+    #ex: /lexi/analysis
+    path('analysis/', views.analysis, name='analysis'),
     #ex: /lexi/commonwords/
     path('commonwords/', views.commonWords, name='common words'),
     #ex: /lexi/businesswords/
