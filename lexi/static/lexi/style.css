@@ -4,28 +4,14 @@
     padding: 20px 0;
 }
 
+.uncommon:hover {
+    /*transform: scale(2,2);*/
+    font-size: 30px;
+}
+
 .uncommon {
-    color: red;
-}
-
-.twentyK {
-    background-color: #e50046;
-}
-
-.tenK {
-    background-color: #e65a03;
-}
-
-.fiveK {
-    background-color: #cc9000;
-}
-
-.twoK {
-    background-color: #9abd00;
-}
-
-.oneK {
-    background-color: #2fe257;
+    text-decoration-line: underline;
+    text-decoration-color: #e50046;
 }
 
 .word {
@@ -37,3 +23,9 @@
     /*box-shadow: 0 2px gray;*/
     transform: translateY(5px);
 }
+
+/*.card-footer {
+    position: fixed;
+    bottom: 0px;
+    width: inherit;
+}*/

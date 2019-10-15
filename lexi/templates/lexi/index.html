@@ -46,13 +46,13 @@
                 {%csrf_token%}
                     <div>
                         <!--Add color styles as span classes-->
-                        <input type="range" name="" id="">
-                        <input type="submit" class="btn btn-outline oneK" name="threshold" value="1000">1k</button> <!--ToDo: Give the color styles-->
+                        <!--input type="range" name="" id=""-->
+                        <button type="submit" class="btn btn-outline oneK" name="threshold" value="1000">1k</button> <!--ToDo: Give the color styles-->
                         <button type="submit" class="btn btn-outline twoK" name="threshold" value="2000">2k</button>
-                        <button type="button" class="btn fiveK" disabled="disabled">5k</button>
+                        <!--button type="button" class="btn fiveK" disabled="disabled">5k</button>
                         <button type="button" class="btn tenK" disabled="disabled">10k</button>
                         <button type="button" class="btn twentyK" disabled="disabled">20k</button>
-                        <!--button type="button" class="btn">Cenitex</button-->
+                        <button type="button" class="btn">Cenitex</button-->
                     </div>
                     <textarea class="form-control my-4" name="inputText" id="textToCheck" rows="8">{{ original_message }}</textarea>
                 <!--

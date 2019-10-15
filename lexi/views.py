@@ -1,4 +1,4 @@
-import os, urllib.request, json, warnings
+import os, urllib.request, json, warnings, re
 #ToDo: Move all Business logic to another python file / folder.
 from django.shortcuts import render, get_object_or_404
 from django.utils import html
@@ -12,6 +12,7 @@ mostCommonWords = []
 threshold = 0
 url = 'http://www.thesaurus.com/browse/'
 suggestions = ''
+allSynonyms = []
 
 def lookForSynonyms(word):
     try:
@@ -29,36 +30,33 @@ def lookForSynonyms(word):
         for synonym in structure['searchData']['tunaApiData']['posTabs']:
             for term in synonym['synonyms']:
                 if int(term['similarity']) == 100 and word in mostCommonWords:
+                    allSynonyms[word].append(term['term'])
                     synonyms.append(term['term'])
                     how_many_synonyms += 1
+                    print(allSynonyms)
         if how_many_synonyms == 0:
             synonyms.append("Not common synonyms.")
+            allSynonyms[word] = []
+            print(allSynonyms)
         return synonyms
     except urllib.error.HTTPError as err:
         if err.code == 404:
             print(word + " was not found.")
             synonyms.append(word + " was not found at Thesaurus.")
+            #allSynonyms[word] = []
             return synonyms
         else:
             raise
     except Exception as e1:
-        print(f"There is an error in lookForSynonyms: {str(e1)}")
+        print(f"There is an error in lookForSynonyms for {word}: {str(e1)}")
 
 def lookForWord(word):
     #ToDo: Include Keras text preprocessing for words with an character stick (i.e. ?)
     #ToDo: Look for the index if the word is within the 20k most common words, to avoid check multiple times
     global threshold
     global mostCommonWords
-    if word in mostCommonWords[10000:]:
-        return "twentyK"
-    if word in mostCommonWords[5000:10000]:
-        return "tenK"
-    if word in mostCommonWords[2000:5000]:
-        return "fiveK"
-    if word in mostCommonWords[1000:2000]:
-        return "twoK"
-    if word in mostCommonWords[:1000]:
-        return "oneK"
+    if word in mostCommonWords[:int(threshold)] or re.findall("[0-9]", word):
+        return "common"
     return "uncommon"
 
 def splitByWords(simpleSentence):
@@ -67,8 +65,8 @@ def splitByWords(simpleSentence):
     for w in words:
         if (w not in ("", " ", "\n", "\r")):
             whereIs = lookForWord(w.lower())
-            if whereIs not in ("oneK", "twoK"):
-                print(w + " - (" + whereIs + ")")
+            if whereIs != "common":
+                #print(w + " - (" + whereIs + ")")
                 synonyms = lookForSynonyms(w.lower())
                 if synonyms:    #ToDo: Check Generator Expressions (https://www.python.org/dev/peps/pep-0289/)
                     global suggestions
@@ -82,6 +80,7 @@ def splitByWords(simpleSentence):
                     suggestions += '</section>'
             #if w.lower() in mostCommonWords[:int(threshold)]:
             checked_simple_sentence += '<span class=\'badge word '+ whereIs +'\'>' + w + '</span> '
+            #checked_simple_sentence += '<span class=\''+ whereIs +'\'>' + w + '</span> '
             #else:
             #    checked_simple_sentence += '<span class=\'uncommon\'>' + w + '</span> '
     return checked_simple_sentence
@@ -130,7 +129,8 @@ def analysis(request):
         return render(request, 'lexi/analysis.html', {
             'original_message': inputText,
             'checked_message': splitByParagraphs(inputText),
-            'suggestions': suggestions
+            'suggestions': suggestions,
+            'allSynonyms': allSynonyms
         })
     else:
         print("There is not a text to analyze")
