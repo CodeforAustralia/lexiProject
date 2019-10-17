@@ -13,6 +13,7 @@ threshold = 0
 url = 'http://www.thesaurus.com/browse/'
 suggestions = ''
 allSynonyms = []
+count = 0
 
 def lookForSynonyms(word):
     try:
@@ -29,15 +30,17 @@ def lookForSynonyms(word):
         synonyms.clear()
         for synonym in structure['searchData']['tunaApiData']['posTabs']:
             for term in synonym['synonyms']:
-                if int(term['similarity']) == 100 and word in mostCommonWords:
-                    allSynonyms[word].append(term['term'])
-                    synonyms.append(term['term'])
+                if int(term['similarity']) >= 60 and word in mostCommonWords:
+                    #allSynonyms[word].append(term['term'])
+                    synonyms.append(term['term'] + '<span class="badge badge-light">' + term['similarity'] + '</span>')
                     how_many_synonyms += 1
-                    print(allSynonyms)
+                    global count
+                    count += 1
+                    #print(allSynonyms)
         if how_many_synonyms == 0:
             synonyms.append("Not common synonyms.")
-            allSynonyms[word] = []
-            print(allSynonyms)
+            #allSynonyms[word] = []
+            #print(allSynonyms)
         return synonyms
     except urllib.error.HTTPError as err:
         if err.code == 404:
@@ -49,7 +52,9 @@ def lookForSynonyms(word):
             raise
     except Exception as e1:
         print(f"There is an error in lookForSynonyms for {word}: {str(e1)}")
-
+        synonyms.append(word + " was not found at Thesaurus.")
+        return synonyms
+        
 def lookForWord(word):
     #ToDo: Include Keras text preprocessing for words with an character stick (i.e. ?)
     #ToDo: Look for the index if the word is within the 20k most common words, to avoid check multiple times
@@ -66,7 +71,7 @@ def splitByWords(simpleSentence):
         if (w not in ("", " ", "\n", "\r")):
             whereIs = lookForWord(w.lower())
             if whereIs != "common":
-                #print(w + " - (" + whereIs + ")")
+                print(w + " - (" + whereIs + ")")
                 synonyms = lookForSynonyms(w.lower())
                 if synonyms:    #ToDo: Check Generator Expressions (https://www.python.org/dev/peps/pep-0289/)
                     global suggestions
@@ -130,7 +135,8 @@ def analysis(request):
             'original_message': inputText,
             'checked_message': splitByParagraphs(inputText),
             'suggestions': suggestions,
-            'allSynonyms': allSynonyms
+            'allSynonyms': allSynonyms,
+            'count': count
         })
     else:
         print("There is not a text to analyze")

@@ -22,24 +22,24 @@
             </div>
         </nav>
     </div>
-    <div class="row py-5">
+    <!--div class="row py-5">
         <div class="col-md">
             <div class="col-md-3">
                 <p>Common words</p>
             </div>
-            <div class="col-md-9">
+            <div class="col-md-3">
                 <div class="progress my-2">
                     <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
-            </div>
+            </div class="col-md-3">
             <div class="progress">
                 <div class="progress-bar progress-bar-striped bg-danger" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
+            </div class="col-md-3">
             <div class="progress my-2">
                 <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
         </div>
-    </div>
+    </div-->
     <div class="row">
         <div class="col-md">
             <h2>Text result</h2>
@@ -51,14 +51,16 @@
         </div>
         <div class="col-md">
             <!--p>This is a <span class="fiveK" data-toggle="tooltip" data-placement="top" title="example | synonym | word">test</span>.</p-->
-        {% for word in allSynonyms %}
+        <!--{% for word in allSynonyms %}
             <label for="">{{ word }}</label>
             <ul>
             {% for synonym in word %}
             <li>synonym</li>
             {% endfor %}
             </ul>
-        {% endfor %}
+        {% endfor %}-->
+        {{ count }}
+        {{ suggestions|safe }}
         </div>
     </div>
     <div class="card-footer text-muted">
