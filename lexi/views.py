@@ -14,6 +14,8 @@ url = 'http://www.thesaurus.com/browse/'
 suggestions = ''
 allSynonyms = []
 count = 0
+commonWordsCounter = 0
+uncommonWordsCounter = 0
 
 def lookForSynonyms(word):
     try:
@@ -30,9 +32,10 @@ def lookForSynonyms(word):
         synonyms.clear()
         for synonym in structure['searchData']['tunaApiData']['posTabs']:
             for term in synonym['synonyms']:
-                if int(term['similarity']) >= 60 and word in mostCommonWords:
+                if int(term['similarity']) == 100 and word in mostCommonWords:
                     #allSynonyms[word].append(term['term'])
-                    synonyms.append(term['term'] + '<span class="badge badge-light">' + term['similarity'] + '</span>')
+                    #synonyms.append(term['term'] + '<span class="badge badge-light">' + term['similarity'] + '</span>')
+                    synonyms.append(term['term'])
                     how_many_synonyms += 1
                     global count
                     count += 1
@@ -71,6 +74,8 @@ def splitByWords(simpleSentence):
         if (w not in ("", " ", "\n", "\r")):
             whereIs = lookForWord(w.lower())
             if whereIs != "common":
+                global uncommonWordsCounter
+                uncommonWordsCounter += 1
                 print(w + " - (" + whereIs + ")")
                 synonyms = lookForSynonyms(w.lower())
                 if synonyms:    #ToDo: Check Generator Expressions (https://www.python.org/dev/peps/pep-0289/)
@@ -83,6 +88,9 @@ def splitByWords(simpleSentence):
                         suggestions += '<li>' + synonym + '</li>'
                     suggestions += '</ul>'
                     suggestions += '</section>'
+            else:
+                global commonWordsCounter
+                commonWordsCounter += 1
             #if w.lower() in mostCommonWords[:int(threshold)]:
             checked_simple_sentence += '<span class=\'badge word '+ whereIs +'\'>' + w + '</span> '
             #checked_simple_sentence += '<span class=\''+ whereIs +'\'>' + w + '</span> '
@@ -110,6 +118,7 @@ def splitByParagraphs(text):
     paragraphs = text.split("\n\r\n")
     for p in paragraphs:
         checked_message += splitByWholeSentences(p)
+    print(f"Total synonyms: {str(count)}")
     return checked_message
 
 def index(request):
@@ -130,13 +139,16 @@ def analysis(request):
         txtFile.close()
         global suggestions
         suggestions = ''
+        global count
+        count = 0
         print(len(mostCommonWords[:int(threshold)]))
         return render(request, 'lexi/analysis.html', {
             'original_message': inputText,
             'checked_message': splitByParagraphs(inputText),
             'suggestions': suggestions,
             'allSynonyms': allSynonyms,
-            'count': count
+            'commonWords': (commonWordsCounter/(commonWordsCounter + uncommonWordsCounter)) * 100,
+            'uncommonWords': (uncommonWordsCounter/(commonWordsCounter + uncommonWordsCounter)) * 100
         })
     else:
         print("There is not a text to analyze")

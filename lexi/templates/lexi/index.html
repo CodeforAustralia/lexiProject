@@ -1,61 +1,39 @@
-<link href="https://fonts.googleapis.com/css?family=Dancing+Script&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-{% load static  %}
-<link rel="stylesheet" href="{% static 'lexi/style.css' %}">
-<div>
-    <div class="card-header p-0">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light py-0 px-5">
-            <a class="navbar-brand" id="lexi-title" href="{% url 'lexi:index' %}">Lexi</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Log in</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Sign up</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </div>
-    <div class="container">
-        <div class="row py-3">
-            <div class="col-md">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pharetra justo nibh, ac congue risus auctor ut. Praesent cursus magna enim, et ornare enim dictum nec. Morbi pretium posuere arcu eu pharetra. Vestibulum porta metus augue, in luctus metus tempus in. Vestibulum sed quam vitae purus pulvinar cursus et id ante. Cras efficitur at sem ut fringilla. Cras iaculis augue suscipit erat pulvinar, sit amet pretium velit congue. Aenean tristique et libero sed posuere. Ut sem urna, volutpat eu cursus ut, varius non massa. Aenean imperdiet magna ac tellus finibus eleifend. Duis viverra massa ante, et dictum elit finibus eu. Mauris accumsan arcu a ligula imperdiet, sit amet pulvinar velit dignissim.
-
-                    Proin dapibus turpis in lacinia hendrerit. Vestibulum nec nulla vitae tortor aliquam vulputate. Vivamus semper finibus elit, venenatis sollicitudin orci aliquet sit amet. Suspendisse eu blandit enim. Pellentesque ullamcorper facilisis porttitor. Curabitur felis erat, luctus in sollicitudin in, semper ut arcu. Sed vestibulum urna porta nisi cursus rutrum. Curabitur id diam ex.
-            </div>
-            <div class="col-md justify-content-center">
-                    <img class="rounded mx-auto d-block" src="https://dummyimage.com/550x400/000/fff" alt="">
-            </div>
+{% extends 'lexi/base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row py-3">
+        <div class="col-md">
+                Loremi ipsum dolor sit amet, consectetur adipiscing elit. Ut pharetra justo nibh, ac congue risus auctor ut. Praesent cursus magna enim, et ornare enim dictum nec. Morbi pretium posuere arcu eu pharetra. Vestibulum porta metus augue, in luctus metus tempus in. Vestibulum sed quam vitae purus pulvinar cursus et id ante. Cras efficitur at sem ut fringilla. Cras iaculis augue suscipit erat pulvinar, sit amet pretium velit congue. Aenean tristique et libero sed posuere. Ut sem urna, volutpat eu cursus ut, varius non massa. Aenean imperdiet magna ac tellus finibus eleifend. Duis viverra massa ante, et dictum elit finibus eu. Mauris accumsan arcu a ligula imperdiet, sit amet pulvinar velit dignissim.
+                Proin dapibus turpis in lacinia hendrerit. Vestibulum nec nulla vitae tortor aliquam vulputate. Vivamus semper finibus elit, venenatis sollicitudin orci aliquet sit amet. Suspendisse eu blandit enim. Pellentesque ullamcorper facilisis porttitor. Curabitur felis erat, luctus in sollicitudin in, semper ut arcu. Sed vestibulum urna porta nisi cursus rutrum. Curabitur id diam ex.
         </div>
-        <div class="row py-2">
-            <div class="col-md">
-                <h2>Instructions to follow</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pharetra justo nibh, ac congue risus auctor ut. Praesent cursus magna enim, et ornare enim dictum nec. Morbi pretium posuere arcu eu pharetra. Vestibulum porta metus augue, in luctus metus tempus in. Vestibulum sed quam vitae purus pulvinar cursus et id ante. Cras efficitur at sem ut fringilla. Cras iaculis augue suscipit erat pulvinar, sit amet pretium velit congue. Aenean tristique et libero sed posuere. Ut sem urna, volutpat eu cursus ut, varius non massa. Aenean imperdiet magna ac tellus finibus eleifend. Duis viverra massa ante, et dictum elit finibus eu. Mauris accumsan arcu a ligula imperdiet, sit amet pulvinar velit dignissim.</p>
-                {% if error_message%}
-                <div class="alert alert-danger" role="alert">{{ error_message }}</div>
-                {% endif %}
-            </div>
-            <div class="w-100"></div>
-            <div class="col-md">
-                <form action="{% url 'lexi:analysis' %}" method="post">
-                {%csrf_token%}
-                    <div>
-                        <!--Add color styles as span classes-->
-                        <!--input type="range" name="" id=""-->
-                        <button type="submit" class="btn btn-outline oneK" name="threshold" value="1000">1k</button> <!--ToDo: Give the color styles-->
-                        <button type="submit" class="btn btn-outline twoK" name="threshold" value="2000">2k</button>
-                        <!--button type="button" class="btn fiveK" disabled="disabled">5k</button>
-                        <button type="button" class="btn tenK" disabled="disabled">10k</button>
-                        <button type="button" class="btn twentyK" disabled="disabled">20k</button>
-                        <button type="button" class="btn">Cenitex</button-->
-                    </div>
-                    <textarea class="form-control my-4" name="inputText" id="textToCheck" rows="8">{{ original_message }}</textarea>
-                <!--
+        <div class="col-md justify-content-center">
+                <img class="rounded mx-auto d-block" src="https://dummyimage.com/550x400/000/fff" alt="">
+        </div>
+    </div>
+    <div class="row py-2">
+        <div class="col-md">
+            <h2>Instructions to follow</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pharetra justo nibh, ac congue risus auctor ut. Praesent cursus magna enim, et ornare enim dictum nec. Morbi pretium posuere arcu eu pharetra. Vestibulum porta metus augue, in luctus metus tempus in. Vestibulum sed quam vitae purus pulvinar cursus et id ante. Cras efficitur at sem ut fringilla. Cras iaculis augue suscipit erat pulvinar, sit amet pretium velit congue. Aenean tristique et libero sed posuere. Ut sem urna, volutpat eu cursus ut, varius non massa. Aenean imperdiet magna ac tellus finibus eleifend. Duis viverra massa ante, et dictum elit finibus eu. Mauris accumsan arcu a ligula imperdiet, sit amet pulvinar velit dignissim.</p>
+            {% if error_message%}
+            <div class="alert alert-danger" role="alert">{{ error_message }}</div>
+            {% endif %}
+        </div>
+        <div class="w-100"></div>
+        <div class="col-md">
+            <form action="{% url 'lexi:analysis' %}" method="post">
+            {%csrf_token%}
+                <div>
+                    <!--Add color styles as span classes-->
+                    <!--input type="range" name="" id=""-->
+                    <button type="submit" class="btn btn-outline oneK" name="threshold" value="1000">1k</button> <!--ToDo: Give the color styles-->
+                    <button type="submit" class="btn btn-outline twoK" name="threshold" value="2000">2k</button>
+                    <!--button type="button" class="btn fiveK" disabled="disabled">5k</button>
+                    <button type="button" class="btn tenK" disabled="disabled">10k</button>
+                    <button type="button" class="btn twentyK" disabled="disabled">20k</button>
+                    <button type="button" class="btn">Cenitex</button-->
+                </div>
+                <textarea class="form-control my-4" name="inputText" id="textToCheck" rows="8">{{ original_message }}</textarea>
+            <!--
     Please be advised that disruptions are expected to affect peak-hour traffic and public transport tonight, with a climate change protest planned in the CBD.
 
     Protestors are expected to meet at the State Library on Swanston Street at 5pm, before separating to a series of locations in the CBD to block foot and road traffic. The protest is expected to finish at 7pm.
@@ -63,15 +41,8 @@
     Victoria Police are aware of the protest and are calling on people to be patient, plan their journey, and allow extra time for their commute where possible.
 
     Please speak to your manager if you think you may be impacted by the protest.-->
-                    </form>
-            </div>
+            </form>
         </div>
     </div>
-    <div class="card-footer text-muted">
-        <!--ToDo: Footer here! Should be a separate html-->
-        <a href="{% url 'lexi:index' %}">Home</a> | <a href="{% url 'lexi:common words' %}">Common Words</a> | <a href="{% url 'lexi:business words' %}">Business Words</a> | <a href="{% url 'lexi:message analysis' %}">Message Analysis</a>
-    </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+{% endblock %}
