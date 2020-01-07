@@ -28,3 +28,23 @@ class Business_Word(models.Model):
     
     def __str__(self):
         return self.word
+
+class Configuration(models.Model):
+    THESAURUS = 'TH' 
+    DATABASE = 'DB'
+    AI_MODEL = 'AI'
+    SOURCE_CHOICES = [
+        (THESAURUS, 'Thesaurus'),
+        (DATABASE, 'Database'),
+        (AI_MODEL, 'AI Model'),
+    ]
+    source = models.CharField(
+        max_length = 2,
+        choices = SOURCE_CHOICES,
+        default = THESAURUS
+    )
+    threshold = models.FloatField(default = 0.8) # Look if these is the best way of creating configuration variables. It will be only one record of the Configuration Model.
+
+    def __str__(self):
+        return ('Source: ' + self.source + ' - Threshold: ' + self.threshold)
+    
