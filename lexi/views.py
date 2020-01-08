@@ -1,154 +1,34 @@
-import os, urllib.request, json, warnings, re
-#ToDo: Move all Business logic to another python file / folder.
 from django.shortcuts import render, get_object_or_404
 from django.utils import html
-from pprint import pprint
-from bs4 import BeautifulSoup
+
+# Import Lexi functions
+from .business_rules import makeAnalysis
 
 # Create your views here.
 from .models import Message_Analysis, Business_Word, Common_Word
 
-mostCommonWords = []
-threshold = 0
-url = 'http://www.thesaurus.com/browse/'
-suggestions = ''
-allSynonyms = []
-count = 0
-commonWordsCounter = 0
-uncommonWordsCounter = 0
-
-def lookForSynonyms(word):
-    try:
-        how_many_synonyms = 0
-        synonyms = []
-        content = urllib.request.urlopen(url + word)
-        data = content.read().decode('utf-8')
-        content.close()
-        soup = BeautifulSoup(data, 'html.parser')
-        results = soup.find_all("script")
-        result = results[22].string #ToDo: Fix or improve this!
-        json_txt = result.replace("window.INITIAL_STATE = ","").replace("};","}")
-        structure = json.loads(json_txt)
-        synonyms.clear()
-        for synonym in structure['searchData']['tunaApiData']['posTabs']:
-            for term in synonym['synonyms']:
-                if int(term['similarity']) == 100 and word in mostCommonWords:
-                    #allSynonyms[word].append(term['term'])
-                    #synonyms.append(term['term'] + '<span class="badge badge-light">' + term['similarity'] + '</span>')
-                    synonyms.append(term['term'])
-                    how_many_synonyms += 1
-                    global count
-                    count += 1
-                    #print(allSynonyms)
-        if how_many_synonyms == 0:
-            synonyms.append("Not common synonyms.")
-            #allSynonyms[word] = []
-            #print(allSynonyms)
-        return synonyms
-    except urllib.error.HTTPError as err:
-        if err.code == 404:
-            print(word + " was not found.")
-            synonyms.append(word + " was not found at Thesaurus.")
-            #allSynonyms[word] = []
-            return synonyms
-        else:
-            raise
-    except Exception as e1:
-        print(f"There is an error in lookForSynonyms for {word}: {str(e1)}")
-        synonyms.append(word + " was not found at Thesaurus.")
-        return synonyms
-        
-def lookForWord(word):
-    #ToDo: Include Keras text preprocessing for words with an character stick (i.e. ?)
-    #ToDo: Look for the index if the word is within the 20k most common words, to avoid check multiple times
-    global threshold
-    global mostCommonWords
-    if word in mostCommonWords[:int(threshold)] or re.findall("[0-9]", word):
-        return "common"
-    return "uncommon"
-
-def splitByWords(simpleSentence):
-    checked_simple_sentence = ""
-    words = simpleSentence.split(" ")
-    for w in words:
-        if (w not in ("", " ", "\n", "\r")):
-            whereIs = lookForWord(w.lower())
-            if whereIs != "common":
-                global uncommonWordsCounter
-                uncommonWordsCounter += 1
-                print(w + " - (" + whereIs + ")")
-                synonyms = lookForSynonyms(w.lower())
-                if synonyms:    #ToDo: Check Generator Expressions (https://www.python.org/dev/peps/pep-0289/)
-                    global suggestions
-                    suggestions += '<section>'
-                    suggestions += '<h3>' + w + '</h3>'
-                    suggestions += '<ul>'
-                    for synonym in synonyms:
-                        #print(synonym)
-                        suggestions += '<li>' + synonym + '</li>'
-                    suggestions += '</ul>'
-                    suggestions += '</section>'
-            else:
-                global commonWordsCounter
-                commonWordsCounter += 1
-            #if w.lower() in mostCommonWords[:int(threshold)]:
-            checked_simple_sentence += '<span class=\'badge word '+ whereIs +'\'>' + w + '</span> '
-            #checked_simple_sentence += '<span class=\''+ whereIs +'\'>' + w + '</span> '
-            #else:
-            #    checked_simple_sentence += '<span class=\'uncommon\'>' + w + '</span> '
-    return checked_simple_sentence
-
-def splitBySimpleSentences(wholeSentence):
-    #print(wholeSentence)
-    checked_whole_sentence = ""
-    simpleSentences = wholeSentence.split(",")
-    for ss in simpleSentences:
-        checked_whole_sentence += splitByWords(ss)
-    return checked_whole_sentence
-
-def splitByWholeSentences(paragraph):
-    checked_paragraph = ""
-    wholeSentences = paragraph.split(".")
-    for ws in wholeSentences:
-        checked_paragraph += splitBySimpleSentences(ws)
-    return checked_paragraph
-
-def splitByParagraphs(text):
-    checked_message = ""
-    paragraphs = text.split("\n\r\n")
-    for p in paragraphs:
-        checked_message += splitByWholeSentences(p)
-    print(f"Total synonyms: {str(count)}")
-    return checked_message
+global_variables = {
+    'url': 'http://www.thesaurus.com/browse/',
+    'threshold': 0,
+    'suggestions': '',
+    'count': 0,
+    'commonWordsPercentage': 0.0,
+    'uncommonWordsPercentage': 0.0
+}
 
 def index(request):
     return render(request, 'lexi/index.html')
 
 def analysis(request):
-    inputText = ""
-    #print(request.POST.__getitem__('inputText'))
     inputText = request.POST.__getitem__('inputText')
     if('threshold' in request.POST and inputText != ""):
-        global threshold
-        threshold = request.POST.__getitem__('threshold')
-        #ToDo: Change the way I read the file
-        txtFilepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static/20k.txt")
-        txtFile = open(txtFilepath, "r")
-        global mostCommonWords
-        mostCommonWords = txtFile.read().split(",")
-        txtFile.close()
-        global suggestions
-        suggestions = ''
-        global count
-        count = 0
-        print(len(mostCommonWords[:int(threshold)]))
+        global_variables['threshold'] = request.POST.__getitem__('threshold')
+        checked_message = makeAnalysis(inputText, global_variables),
         return render(request, 'lexi/analysis.html', {
-            'original_message': inputText,
-            'checked_message': splitByParagraphs(inputText),
-            'suggestions': suggestions,
-            'allSynonyms': allSynonyms,
-            'commonWords': (commonWordsCounter/(commonWordsCounter + uncommonWordsCounter)) * 100,
-            'uncommonWords': (uncommonWordsCounter/(commonWordsCounter + uncommonWordsCounter)) * 100
+            'checked_message': checked_message,
+            'suggestions': global_variables['suggestions'],
+            'commonWords': global_variables['commonWordsPercentage'],
+            'uncommonWords': global_variables['uncommonWordsPercentage']
         })
     else:
         print("There is not a text to analyze")

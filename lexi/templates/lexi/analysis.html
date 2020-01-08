@@ -19,17 +19,8 @@
             <p class="lead" id="checkedMessage">{{ checked_message|safe }}</p>
         </div>
         <div class="col-md">
-            <!--p>This is a <span class="fiveK" data-toggle="tooltip" data-placement="top" title="example | synonym | word">test</span>.</p-->
-        <!--{% for word in allSynonyms %}
-            <label for="">{{ word }}</label>
-            <ul>
-            {% for synonym in word %}
-            <li>synonym</li>
-            {% endfor %}
-            </ul>
-        {% endfor %}-->
-        {{ count }}
-        {{ suggestions|safe }}
+            {{ count }}
+            {{ suggestions|safe }}
         </div>
     </div>
 </div>
