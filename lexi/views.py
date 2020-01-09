@@ -9,6 +9,7 @@ from .models import Message_Analysis, Business_Word, Common_Word
 
 global_variables = {
     'url': 'http://www.thesaurus.com/browse/',
+    'source': 'Thesaurus',
     'threshold': 0,
     'suggestions': '',
     'count': 0,
@@ -23,12 +24,10 @@ def analysis(request):
     inputText = request.POST.__getitem__('inputText')
     if('threshold' in request.POST and inputText != ""):
         global_variables['threshold'] = request.POST.__getitem__('threshold')
-        checked_message = makeAnalysis(inputText, global_variables),
+        checked_message = makeAnalysis(inputText, global_variables)
         return render(request, 'lexi/analysis.html', {
             'checked_message': checked_message,
-            'suggestions': global_variables['suggestions'],
-            'commonWords': global_variables['commonWordsPercentage'],
-            'uncommonWords': global_variables['uncommonWordsPercentage']
+            'global_variables': global_variables
         })
     else:
         print("There is not a text to analyze")

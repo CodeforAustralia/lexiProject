@@ -2,31 +2,56 @@
 {% block content %}
 <div class="container">
     <div class="row py-3">
-        <div class="col-md-2"></div>
-        <div class="col-md">
-            <p>Subtitle</p>
+        <div class="col">
+            <h1 class="center-aligned">Results</h1>
+        </div>
+    </div>
+    <div class="row py-3">
+        <div class="col-md justify-content-end" style="margin: auto; display: inline-flex;">
+            <div style="margin-right: 1rem;">Common Words</div>
+            <div class="bg-success progress-bar-striped common-icon"></div>
+        </div>
+        <div class="col-md" style="margin: auto; display: inline-flex;">
+            <div class="bg-danger progress-bar-striped common-icon"></div>
+            <div style="margin-left: 1rem;">Uncommon Words</div>
+        </div>
+    </div>
+    <div class="row py-3">
+        <div class="col-md" style="margin: auto; display: inline-flex;">
+            <div class="bg-success progress-bar-striped common-icon"></div>
+            <div style="margin-left: 1rem;">Common Words</div>
+        </div>
+        <div class="col-md-7">
             <div class="progress">
-                <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: {{commonWords}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{commonWords|floatformat:"2"}}%</div>
-                <div class="progress-bar progress-bar-striped bg-danger" role="progressbar" style="width: {{uncommonWords}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{uncommonWords|floatformat:"2"}}%</div>
-                <!--div class="progress-bar progress-bar-striped" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div-->
+                <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: {{global_variables.commonWordsPercentage}}%" aria-valuemin="0" aria-valuemax="100">{{global_variables.commonWordsPercentage|floatformat:"2"}}%</div>
+                <div class="progress-bar progress-bar-striped bg-danger" role="progressbar" style="width: {{global_variables.uncommonWordsPercentage}}%" aria-valuemin="0" aria-valuemax="100">{{global_variables.uncommonWordsPercentage|floatformat:"2"}}%</div>
             </div>
         </div>
-        <div class="col-md-2"></div>
+        <div class="col-md" style="margin: auto; display: inline-flex;">
+            <div class="bg-danger progress-bar-striped common-icon"></div>
+            <div style="margin-left: 1rem;">Uncommon Words</div>
+        </div>
+    </div>
+    <div class="row py-3">
+        <div class="col">
+            <h1 class="center-aligned {{global_variables.result_class}}">{{global_variables.result}}</h1>
+        </div>
     </div>
     <div class="row py-3">
         <div class="col-md-9">
-            <h2>Text result</h2>
-            <p class="lead" id="checkedMessage">{{ checked_message|safe }}</p>
+            <div class="col-md">
+                <h2>Text result</h2>
+                <p class="lead" id="checkedMessage">{{ checked_message|safe }}</p>
+            </div>
+            <div class="col-md">
+                <h3>Notes</h3>
+                <p class="lead">This analysis was made based on the {{global_variables.threshold}} most common words and the suggestions source was {{global_variables.source}}.</p>
+                <p class="lead">Elapsed time: {{global_variables.elapsed_time}}</p>
+            </div>
         </div>
         <div class="col-md">
-            {{ count }}
-            {{ suggestions|safe }}
+            {{ global_variables.suggestions|safe }}
         </div>
     </div>
 </div>
-<script>
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
-    })
-</script>
 {% endblock %}

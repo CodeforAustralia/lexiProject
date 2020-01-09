@@ -10,9 +10,8 @@ url = ''
 uncommonWordsCounter = 0
 commonWordsCounter = 0
 suggestions = ''
-count = 0
-
-#global mostCommonWords
+elapsed_time = ''
+words_looked_for = []
 
 def lookForSynonyms(word):
     try:
@@ -27,14 +26,13 @@ def lookForSynonyms(word):
         json_txt = result.replace("window.INITIAL_STATE = ","").replace("};","}")
         structure = json.loads(json_txt)
         synonyms.clear()
+        global mostCommonWords
         for synonym in structure['searchData']['tunaApiData']['posTabs']:
             for term in synonym['synonyms']:
-                if int(term['similarity']) == 100 and word in mostCommonWords:
+                if int(term['similarity']) == 100 and word in mostCommonWords:  #ToDo: Validate the in validation
                     #synonyms.append(term['term'] + '<span class="badge badge-light">' + term['similarity'] + '</span>')
                     synonyms.append(term['term'])
                     how_many_synonyms += 1
-                    global count
-                    count += 1
         if how_many_synonyms == 0:
             synonyms.append("Not common synonyms.")
         return synonyms
@@ -69,25 +67,23 @@ def splitByWords(simpleSentence):
                 global uncommonWordsCounter
                 uncommonWordsCounter += 1
                 print(w + " - (" + whereIs + ")")
-                synonyms = lookForSynonyms(w.lower())
-                if synonyms:    #ToDo: Check Generator Expressions (https://www.python.org/dev/peps/pep-0289/)
-                    global suggestions
-                    suggestions += '<section>'
-                    suggestions += '<h3>' + w + '</h3>'
-                    suggestions += '<ul>'
-                    for synonym in synonyms:
-                        #print(synonym)
-                        suggestions += '<li>' + synonym + '</li>'
-                    suggestions += '</ul>'
-                    suggestions += '</section>'
+                if w.lower() not in words_looked_for:
+                    words_looked_for.append(w.lower())
+                    synonyms = lookForSynonyms(w.lower())
+                    if synonyms:    #ToDo: Check Generator Expressions (https://www.python.org/dev/peps/pep-0289/)
+                        global suggestions
+                        suggestions += '<section>'
+                        suggestions += '<h3>' + w + '</h3>'
+                        suggestions += '<ul>'
+                        for synonym in synonyms:
+                            #print(synonym)
+                            suggestions += '<li>' + synonym + '</li>'
+                        suggestions += '</ul>'
+                        suggestions += '</section>'
             else:
                 global commonWordsCounter
                 commonWordsCounter += 1
-            #if w.lower() in mostCommonWords[:int(threshold)]:
-            checked_simple_sentence += '<span class=\'badge word '+ whereIs +'\'>' + w + '</span> '
-            #checked_simple_sentence += '<span class=\''+ whereIs +'\'>' + w + '</span> '
-            #else:
-            #    checked_simple_sentence += '<span class=\'uncommon\'>' + w + '</span> '
+            checked_simple_sentence += '<span class=\''+ whereIs +'\'>' + w + '</span> '
     return checked_simple_sentence
 
 def splitBySimpleSentences(wholeSentence):
@@ -110,18 +106,24 @@ def splitByParagraphs(text):
     paragraphs = text.split("\n\r\n")
     for p in paragraphs:
         checked_message += splitByWholeSentences(p)
-    print(f"Total synonyms: {str(count)}")
     return checked_message
 
 def set_results(global_variables):
     global suggestions
     global_variables['suggestions'] = suggestions
-    global count
-    global_variables['count'] = count
-    global commonWordsCounter
-    global uncommonWordsCounter
-    global_variables['commonWordsPercentage'] = (commonWordsCounter/(commonWordsCounter + uncommonWordsCounter)) * 100
+    global commonWordsCounter, uncommonWordsCounter
+    commonWordsPercentage = (commonWordsCounter/(commonWordsCounter + uncommonWordsCounter)) * 100
+    global_variables['commonWordsPercentage'] = commonWordsPercentage
+    print(commonWordsPercentage)
+    if commonWordsPercentage >= 80:
+        global_variables['result'] = 'Passed!'
+        global_variables['result_class'] = 'pass'
+    else:
+        global_variables['result'] = 'Check the message'
+        global_variables['result_class'] = 'bad'
     global_variables['uncommonWordsPercentage'] = (uncommonWordsCounter/(commonWordsCounter + uncommonWordsCounter)) * 100
+    global elapsed_time
+    global_variables['elapsed_time'] = elapsed_time
 
 def makeAnalysis(text, global_variables):
     start = time.time()
@@ -133,8 +135,14 @@ def makeAnalysis(text, global_variables):
     global url
     url = global_variables['url']
     print(global_variables)
+    global commonWordsCounter, uncommonWordsCounter
+    commonWordsCounter = uncommonWordsCounter = 0
+    global words_looked_for
+    words_looked_for = []
+    global suggestions
+    suggestions = ''
     checked_message = splitByParagraphs(text)
-    print(checked_message)
+    global elapsed_time
+    elapsed_time = setElapsedTime(time.time() - start)
     set_results(global_variables)
-    print("Time: "+setElapsedTime(time.time() - start))
     return checked_message

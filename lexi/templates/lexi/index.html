@@ -30,6 +30,7 @@
             <form action="{% url 'lexi:analysis' %}" method="post">
             {%csrf_token%}
                 <div>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  <!--ToDo: Loading icon-->
                     <button type="submit" class="btn btn-outline oneK" name="threshold" value="1000">1k</button> <!--ToDo: Give the color styles-->
                     <button type="submit" class="btn btn-outline twoK" name="threshold" value="2000">2k</button>
                 </div>

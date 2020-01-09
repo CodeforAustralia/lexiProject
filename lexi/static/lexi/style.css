@@ -5,13 +5,13 @@
 }
 
 .uncommon:hover {
-    /*transform: scale(2,2);*/
-    font-size: 30px;
+    font-size: 1.5rem;
 }
 
 .uncommon {
     text-decoration-line: underline;
     text-decoration-color: #e50046;
+    background: #ffffd5;
 }
 
 .word {
@@ -20,12 +20,34 @@
 
 .btn:focus {
     background: greenyellow;
-    /*box-shadow: 0 2px gray;*/
     transform: translateY(5px);
 }
 
-/*.card-footer {
+/*.card-footer {        //ToDo: Get a fixed footer
     position: fixed;
     bottom: 0px;
     width: inherit;
 }*/
+
+.progress {
+    height: 2rem;
+    font-size: 1.3rem;
+}
+
+.center-aligned {
+    text-align: center;
+}
+
+.common-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+}
+
+.pass {
+    color: green;
+}
+
+.bad {
+    color: red;
+}
