@@ -46,5 +46,5 @@ class Configuration(models.Model):
     threshold = models.FloatField(default = 0.8) # Look if these is the best way of creating configuration variables. It will be only one record of the Configuration Model.
 
     def __str__(self):
-        return ('Source: ' + self.source + ' - Threshold: ' + str(self.threshold))
+        return ('Source: ' + self.source + ' - Threshold: ' + str(self.threshold*100)) + "%"
     
