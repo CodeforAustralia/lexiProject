@@ -17,4 +17,6 @@ urlpatterns = [
     path('messageanalysis/', views.messageAnalysis, name='message analysis'),
     #ex: /lexi/messageanalysis/
     path('messageanalysis/<int:analysis_id>/', views.detail, name='analysis detail'),
+
+    #path('import', views.import_words, name='import words'),   #For admin purposes only! ToDo: Move to Admin module.
 ]
