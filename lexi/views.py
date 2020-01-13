@@ -10,7 +10,6 @@ from .models import Message_Analysis, Business_Word, Common_Word
 global_variables = {
     'url': 'http://www.thesaurus.com/browse/',
     'source': 'Thesaurus',
-    'threshold': 0,
     'suggestions': '',
     'count': 0,
     'commonWordsPercentage': 0.0,
@@ -22,8 +21,7 @@ def index(request):
 
 def analysis(request):
     inputText = request.POST.__getitem__('inputText')
-    if('threshold' in request.POST and inputText != ""):
-        global_variables['threshold'] = request.POST.__getitem__('threshold')
+    if(inputText != ""):
         checked_message = makeAnalysis(inputText, global_variables)
         return render(request, 'lexi/analysis.html', {
             'checked_message': checked_message,

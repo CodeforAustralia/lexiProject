@@ -7,6 +7,7 @@ from .models import Word, Configuration
 from .tools import openFile, setElapsedTime
 
 mostCommonWords = []
+amount_common_words = 2000 #ToDo: Add to DB model and query it
 threshold = 0
 url = ''
 uncommonWordsCounter = 0
@@ -53,9 +54,8 @@ def lookForSynonyms(word):
 def lookForWord(word):
     #ToDo: Include Keras text preprocessing for words with an character stick (i.e. ?)
     #ToDo: Look for the index if the word is within the 20k most common words, to avoid check multiple times
-    global threshold
     global mostCommonWords
-    if word in mostCommonWords[:int(threshold)] or re.findall("[0-9]", word):
+    if word in mostCommonWords or re.findall("[0-9]", word):
         return "common"
     return "uncommon"
 
@@ -114,42 +114,47 @@ def set_results(global_variables):
     global suggestions
     global_variables['suggestions'] = suggestions
     global commonWordsCounter, uncommonWordsCounter
-    commonWordsPercentage = (commonWordsCounter/(commonWordsCounter + uncommonWordsCounter)) * 100
-    global_variables['commonWordsPercentage'] = commonWordsPercentage
+    commonWordsPercentage = (commonWordsCounter/(commonWordsCounter + uncommonWordsCounter))
+    global_variables['commonWordsPercentage'] = commonWordsPercentage * 100
     print(commonWordsPercentage)
-    if commonWordsPercentage >= 80:
+    global threshold
+    global_variables['threshold'] = threshold * 100
+    if commonWordsPercentage >= threshold:
         global_variables['result'] = 'Passed!'
-        global_variables['result_class'] = 'pass'
+        global_variables['result_class'] = 'text-success'
     else:
         global_variables['result'] = 'Check the message'
-        global_variables['result_class'] = 'bad'
+        global_variables['result_class'] = 'text-danger'
     global_variables['uncommonWordsPercentage'] = (uncommonWordsCounter/(commonWordsCounter + uncommonWordsCounter)) * 100
+    global amount_common_words
+    global_variables['amount_common_words'] = amount_common_words
     global elapsed_time
     global_variables['elapsed_time'] = elapsed_time
+    print(global_variables)
 
 def makeAnalysis(text, global_variables):
-    #start = time.time()
-    #global mostCommonWords
-    #mostCommonWords = openFile(os.path.join(os.path.dirname(os.path.abspath(__file__)), "static/20k.txt"))
-    #global threshold
-    #threshold = global_variables['threshold']
-    #print(len(mostCommonWords[:int(threshold)]))
-    #global url
-    #url = global_variables['url']
-    #print(global_variables)
-    #global commonWordsCounter, uncommonWordsCounter
-    #commonWordsCounter = uncommonWordsCounter = 0
-    #global words_looked_for
-    #words_looked_for = []
-    #global suggestions
-    #suggestions = ''
-    #checked_message = splitByParagraphs(text)
-    #global elapsed_time
-    #elapsed_time = setElapsedTime(time.time() - start)
-    #set_results(global_variables)
-    checked_message = text
+    start = time.time()
+    global mostCommonWords
+    mostCommonWords = openFile(os.path.join(os.path.dirname(os.path.abspath(__file__)), "static/20k.txt"))
+    global amount_common_words
+    print('Common words: ' + str(len(mostCommonWords[:amount_common_words])))
+    global url
+    url = global_variables['url']
+    print(global_variables)
+    global commonWordsCounter, uncommonWordsCounter
+    commonWordsCounter = uncommonWordsCounter = 0
+    global words_looked_for
+    words_looked_for = []
+    global suggestions
+    suggestions = ''
+    checked_message = splitByParagraphs(text)
+    global elapsed_time
+    elapsed_time = setElapsedTime(time.time() - start)
     configuration = Configuration.objects.all().first()
-    print(configuration.source, configuration.threshold, configuration)
+    print(configuration)
+    global threshold
+    threshold = configuration.threshold
+    set_results(global_variables)
     words = Word.objects.all()[:10]
     if words.exists():
         print([word.word for word in words.iterator()])
