@@ -1,6 +1,8 @@
 import time, re, urllib.request, os, json
 from bs4 import BeautifulSoup
 
+from .models import Word, Configuration
+
 # Import Lexi functions
 from .tools import openFile, setElapsedTime
 
@@ -126,23 +128,40 @@ def set_results(global_variables):
     global_variables['elapsed_time'] = elapsed_time
 
 def makeAnalysis(text, global_variables):
-    start = time.time()
-    global mostCommonWords
-    mostCommonWords = openFile(os.path.join(os.path.dirname(os.path.abspath(__file__)), "static/20k.txt"))
-    global threshold
-    threshold = global_variables['threshold']
-    print(len(mostCommonWords[:int(threshold)]))
-    global url
-    url = global_variables['url']
-    print(global_variables)
-    global commonWordsCounter, uncommonWordsCounter
-    commonWordsCounter = uncommonWordsCounter = 0
-    global words_looked_for
-    words_looked_for = []
-    global suggestions
-    suggestions = ''
-    checked_message = splitByParagraphs(text)
-    global elapsed_time
-    elapsed_time = setElapsedTime(time.time() - start)
-    set_results(global_variables)
+    #start = time.time()
+    #global mostCommonWords
+    #mostCommonWords = openFile(os.path.join(os.path.dirname(os.path.abspath(__file__)), "static/20k.txt"))
+    #global threshold
+    #threshold = global_variables['threshold']
+    #print(len(mostCommonWords[:int(threshold)]))
+    #global url
+    #url = global_variables['url']
+    #print(global_variables)
+    #global commonWordsCounter, uncommonWordsCounter
+    #commonWordsCounter = uncommonWordsCounter = 0
+    #global words_looked_for
+    #words_looked_for = []
+    #global suggestions
+    #suggestions = ''
+    #checked_message = splitByParagraphs(text)
+    #global elapsed_time
+    #elapsed_time = setElapsedTime(time.time() - start)
+    #set_results(global_variables)
+    checked_message = text
+    configuration = Configuration.objects.all().first()
+    print(configuration.source, configuration.threshold, configuration)
+    words = Word.objects.all()[:10]
+    if words.exists():
+        print([word.word for word in words.iterator()])
     return checked_message
+
+def import_common_words():
+    count = 0
+    #common_words = openFile(os.path.join(os.path.dirname(os.path.abspath(__file__)), "static/20k.txt"))[:2000]
+    #for word in common_words:
+    #    w = Word(word = word, is_common = True)
+    #    w.save()
+    #    count += 1
+    #    if(count%400 == 0):
+    #        print(str(count) + ' words saved!')
+    print('2000 most common words imported successfully!')
