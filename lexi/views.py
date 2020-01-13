@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.utils import html
 
 # Import Lexi functions
-from .business_rules import makeAnalysis
+from .business_rules import makeAnalysis, import_common_words
 
 # Create your views here.
 from .models import Message_Analysis, Business_Word, Common_Word
@@ -58,5 +58,9 @@ def detail(request, analysis_id):
     return render(request, 'lexi/detail.html', {
         'analysis': analysis
     })
+
+def import_words(request):
+    import_common_words()
+    return render(request, 'lexi/index.html', {})
 
 #ToDo: Use generic views (https://docs.djangoproject.com/en/2.2/intro/tutorial04/)
