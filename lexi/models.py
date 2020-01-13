@@ -47,4 +47,15 @@ class Configuration(models.Model):
 
     def __str__(self):
         return ('Source: ' + self.source + ' - Threshold: ' + str(self.threshold*100)) + "%"
+
+class Word(models.Model):
+    word = models.CharField(primary_key=True, max_length=50)
+    is_common = models.BooleanField(default=False)
+    is_business_word = models.BooleanField(default=False)
+    creation_datetime = models.DateTimeField(auto_now_add=True)
+    creation_user = models.CharField(max_length=20, default='admin')   # ToDo: Change using the session user request.session['member_id']
+
+    def __str__(self):
+        return self.word
+    
     
