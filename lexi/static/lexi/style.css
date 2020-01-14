@@ -34,6 +34,12 @@
     font-size: 1.3rem;
 }
 
+.progress-labels {
+    margin: auto 0;
+    display: inline-flex;
+    font-size: 1.3rem;
+}
+
 .center-aligned {
     text-align: center;
 }
@@ -42,12 +48,4 @@
     width: 1.5rem;
     height: 1.5rem;
     border-radius: 50%;
-}
-
-.pass {
-    color: green;
-}
-
-.bad {
-    color: red;
 }
