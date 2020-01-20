@@ -48,6 +48,11 @@ class Configuration(models.Model):
     def __str__(self):
         return ('Source: ' + self.source + ' - Threshold: ' + str(self.threshold*100)) + "%"
 
+    def get_source_description(self, code):
+        for source in self.SOURCE_CHOICES:
+            if code == source[0]:
+                return source[1]
+
 class Word(models.Model):
     word = models.CharField(primary_key=True, max_length=50)
     is_common = models.BooleanField(default=False)

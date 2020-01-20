@@ -9,7 +9,6 @@ from .models import Message_Analysis, Business_Word, Common_Word
 
 global_variables = {
     'url': 'http://www.thesaurus.com/browse/',
-    'source': 'Thesaurus',
     'suggestions': '',
     'count': 0,
     'commonWordsPercentage': 0.0,

@@ -9,11 +9,11 @@ from .tools import openFile, setElapsedTime
 mostCommonWords = []
 amount_common_words = 2000 #ToDo: Add to DB model and query it
 threshold = 0
+source = ''
 url = ''
 uncommonWordsCounter = 0
 commonWordsCounter = 0
 suggestions = ''
-elapsed_time = ''
 words_looked_for = []
 
 def lookForSynonyms(word):
@@ -110,7 +110,7 @@ def splitByParagraphs(text):
         checked_message += splitByWholeSentences(p)
     return checked_message
 
-def set_results(global_variables):
+def set_results(global_variables, start):
     global suggestions
     global_variables['suggestions'] = suggestions
     global commonWordsCounter, uncommonWordsCounter
@@ -128,16 +128,38 @@ def set_results(global_variables):
     global_variables['uncommonWordsPercentage'] = (uncommonWordsCounter/(commonWordsCounter + uncommonWordsCounter)) * 100
     global amount_common_words
     global_variables['amount_common_words'] = amount_common_words
-    global elapsed_time
-    global_variables['elapsed_time'] = elapsed_time
+    global source
+    global_variables['source'] = source
+    global_variables['elapsed_time'] = setElapsedTime(time.time() - start)
     print(global_variables)
 
-def makeAnalysis(text, global_variables):
-    start = time.time()
+def getCommonWords():
+    configuration = Configuration.objects.all().first()
+    global threshold, source
+    threshold = configuration.threshold
+    source = configuration.get_source_description(configuration.source)
+    # print(test_source, type(test_source))
+    if(configuration.source == configuration.THESAURUS):
+        print('TH')
+        global amount_common_words
+        common_words = openFile(os.path.join(os.path.dirname(os.path.abspath(__file__)), "static/20k.txt"))[:amount_common_words]
+        # print(common_words[:50])
+        return common_words
+    elif(configuration.source in (configuration.DATABASE, configuration.AI_MODEL)):
+        print('DB', 'AI')
+        common_words = []
+        db_words = Word.objects.all()
+        if db_words.exists():
+            for word in db_words.iterator():
+                common_words.append(word.word)
+        # print(list(common_words))
+        return list(common_words)
+    else:
+        return None
+
+def get_global_variables(global_variables):
     global mostCommonWords
-    mostCommonWords = openFile(os.path.join(os.path.dirname(os.path.abspath(__file__)), "static/20k.txt"))
-    global amount_common_words
-    print('Common words: ' + str(len(mostCommonWords[:amount_common_words])))
+    mostCommonWords = getCommonWords()
     global url
     url = global_variables['url']
     print(global_variables)
@@ -147,17 +169,12 @@ def makeAnalysis(text, global_variables):
     words_looked_for = []
     global suggestions
     suggestions = ''
+
+def makeAnalysis(text, global_variables):
+    start = time.time()
+    get_global_variables(global_variables)
     checked_message = splitByParagraphs(text)
-    global elapsed_time
-    elapsed_time = setElapsedTime(time.time() - start)
-    configuration = Configuration.objects.all().first()
-    print(configuration)
-    global threshold
-    threshold = configuration.threshold
-    set_results(global_variables)
-    words = Word.objects.all()[:10]
-    if words.exists():
-        print([word.word for word in words.iterator()])
+    set_results(global_variables, start)
     return checked_message
 
 def import_common_words():
