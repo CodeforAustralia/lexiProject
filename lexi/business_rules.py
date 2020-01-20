@@ -17,38 +17,43 @@ suggestions = ''
 words_looked_for = []
 
 def lookForSynonyms(word):
-    try:
-        how_many_synonyms = 0
-        synonyms = []
-        content = urllib.request.urlopen( url + word)
-        data = content.read().decode('utf-8')
-        content.close()
-        soup = BeautifulSoup(data, 'html.parser')
-        results = soup.find_all("script")
-        result = results[22].string #ToDo: Fix or improve this!
-        json_txt = result.replace("window.INITIAL_STATE = ","").replace("};","}")
-        structure = json.loads(json_txt)
-        synonyms.clear()
-        global mostCommonWords
-        for synonym in structure['searchData']['tunaApiData']['posTabs']:
-            for term in synonym['synonyms']:
-                if int(term['similarity']) == 100 and word in mostCommonWords:  #ToDo: Validate the in validation
-                    #synonyms.append(term['term'] + '<span class="badge badge-light">' + term['similarity'] + '</span>')
-                    synonyms.append(term['term'])
-                    how_many_synonyms += 1
-        if how_many_synonyms == 0:
-            synonyms.append("Not common synonyms.")
-        return synonyms
-    except urllib.error.HTTPError as err:
-        if err.code == 404:
-            print(word + " was not found.")
+    synonyms = []
+    global source
+    if(source == 'Thesaurus'):
+        try:
+            how_many_synonyms = 0
+            content = urllib.request.urlopen( url + word)
+            data = content.read().decode('utf-8')
+            content.close()
+            soup = BeautifulSoup(data, 'html.parser')
+            results = soup.find_all("script")
+            result = results[22].string #ToDo: Fix or improve this!
+            json_txt = result.replace("window.INITIAL_STATE = ","").replace("};","}")
+            structure = json.loads(json_txt)
+            synonyms.clear()
+            global mostCommonWords
+            for synonym in structure['searchData']['tunaApiData']['posTabs']:
+                for term in synonym['synonyms']:
+                    if int(term['similarity']) == 100 and word in mostCommonWords:  #ToDo: Validate the in validation
+                        #synonyms.append(term['term'] + '<span class="badge badge-light">' + term['similarity'] + '</span>')
+                        synonyms.append(term['term'])
+                        how_many_synonyms += 1
+            if how_many_synonyms == 0:
+                synonyms.append("Not common synonyms.")
+            return synonyms
+        except urllib.error.HTTPError as err:
+            if err.code == 404:
+                print(word + " was not found.")
+                synonyms.append(word + " was not found at Thesaurus.")
+                return synonyms
+            else:
+                raise
+        except Exception as e1:
+            print(f"There is an error in lookForSynonyms for {word}: {str(e1)}")
             synonyms.append(word + " was not found at Thesaurus.")
             return synonyms
-        else:
-            raise
-    except Exception as e1:
-        print(f"There is an error in lookForSynonyms for {word}: {str(e1)}")
-        synonyms.append(word + " was not found at Thesaurus.")
+    else:
+        synonyms.append(word + " has no synonyms that are common words.")
         return synonyms
         
 def lookForWord(word):
