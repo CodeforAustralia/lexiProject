@@ -82,10 +82,11 @@ def splitByWords(simpleSentence):
                             suggestions += '<li>' + synonym + '</li>'
                         suggestions += '</ul>'
                         suggestions += '</section>'
+                checked_simple_sentence += '<span class=\''+ whereIs +'\'>' + w + '</span> '
             else:
                 global commonWordsCounter
                 commonWordsCounter += 1
-            checked_simple_sentence += '<span class=\''+ whereIs +'\'>' + w + '</span> '
+                checked_simple_sentence += (w + ' ')
     return checked_simple_sentence
 
 def splitBySimpleSentences(wholeSentence):
