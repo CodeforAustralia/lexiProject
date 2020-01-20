@@ -13,6 +13,6 @@ class WordAdmin(admin.ModelAdmin):
     list_per_page = 50
     search_fields = ['word']
     list_filter = ['is_common', 'is_business_word', 'creation_datetime', 'creation_user']
-    fields = ['is_common', 'is_business_word']
+    fields = ['word','is_common', 'is_business_word']
 
 admin.site.register(Word, WordAdmin)
