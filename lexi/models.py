@@ -44,9 +44,10 @@ class Configuration(models.Model):
         default = THESAURUS
     )
     threshold = models.FloatField(default = 0.8) # Look if these is the best way of creating configuration variables. It will be only one record of the Configuration Model.
+    subset_common_words = models.IntegerField(null=False)
 
     def __str__(self):
-        return ('Source: ' + self.source + ' - Threshold: ' + str(self.threshold*100)) + "%"
+        return ('Source: ' + self.source + ' - Threshold: ' + str(self.threshold*100)) + '% - Common Words subset: ' + str(self.subset_common_words)
 
     def get_source_description(self, code):
         for source in self.SOURCE_CHOICES:
@@ -59,8 +60,11 @@ class Word(models.Model):
     is_business_word = models.BooleanField(default=False)
     creation_datetime = models.DateTimeField(auto_now_add=True)
     creation_user = models.CharField(max_length=20, default='admin')   # ToDo: Change using the session user request.session['member_id']
+    suggestions = models.ManyToManyField(to='self')
 
     def __str__(self):
         return self.word
-    
+
+    # ToDo: Define the DB model to associate a suggestion for a uncommon word.
+    # ToDo: Check and create properly encapsulation.
     
