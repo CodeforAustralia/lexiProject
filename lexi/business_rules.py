@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 from .models import Word, Configuration
 
 # Import Lexi functions
-from .tools import openFile, setElapsedTime
+from .tools import open_file, set_elapsed_time
 
 mostCommonWords = []
 subset_common_words = 0
@@ -16,7 +16,7 @@ commonWordsCounter = 0
 suggestions = ''
 words_looked_for = []
 
-def lookForSynonyms(word):
+def look_for_synonyms(word):
     synonyms = []
     global source
     if(source == 'Thesaurus'):
@@ -49,7 +49,7 @@ def lookForSynonyms(word):
             else:
                 raise
         except Exception as e1:
-            print(f"There is an error in lookForSynonyms for {word}: {str(e1)}")
+            print(f"There is an error in look_for_synonyms for {word}: {str(e1)}")
             synonyms.append(word + " was not found at Thesaurus.")
             return synonyms
     else:
@@ -63,7 +63,7 @@ def look_for_word(word):
         return "common"
     return "uncommon"
 
-def splitByWords(simpleSentence):
+def split_by_words(simpleSentence):
     checked_simple_sentence = ""
     words = simpleSentence.split(" ")
     for w in words:
@@ -75,7 +75,7 @@ def splitByWords(simpleSentence):
                 print(w + " - (" + whereIs + ")")
                 if w.lower() not in words_looked_for:
                     words_looked_for.append(w.lower())
-                    synonyms = lookForSynonyms(w.lower())
+                    synonyms = look_for_synonyms(w.lower())
                     if synonyms:    #ToDo: Check Generator Expressions (https://www.python.org/dev/peps/pep-0289/)
                         global suggestions
                         suggestions += '<section>'
@@ -93,26 +93,26 @@ def splitByWords(simpleSentence):
                 checked_simple_sentence += (w + ' ')
     return checked_simple_sentence
 
-def splitBySimpleSentences(wholeSentence):
+def split_by_simple_sentences(wholeSentence):
     #print(wholeSentence)
     checked_whole_sentence = ""
     simpleSentences = wholeSentence.split(",")
     for ss in simpleSentences:
-        checked_whole_sentence += splitByWords(ss)
+        checked_whole_sentence += split_by_words(ss)
     return checked_whole_sentence
 
-def splitByWholeSentences(paragraph):
+def split_by_whole_sentences(paragraph):
     checked_paragraph = ""
     wholeSentences = paragraph.split(".")
     for ws in wholeSentences:
-        checked_paragraph += splitBySimpleSentences(ws)
+        checked_paragraph += split_by_simple_sentences(ws)
     return checked_paragraph
 
-def splitByParagraphs(text):    # ToDo: Return the same grammar and punctuaction.
+def split_by_paragraphs(text):    # ToDo: Return the same grammar and punctuaction.
     checked_message = ""
     paragraphs = text.split("\n\r\n")
     for p in paragraphs:
-        checked_message += splitByWholeSentences(p)
+        checked_message += split_by_whole_sentences(p)
     return checked_message
 
 def set_results(global_variables, start):
@@ -135,7 +135,7 @@ def set_results(global_variables, start):
     global_variables['subset_common_words'] = subset_common_words
     global source
     global_variables['source'] = source
-    global_variables['elapsed_time'] = setElapsedTime(time.time() - start)
+    global_variables['elapsed_time'] = set_elapsed_time(time.time() - start)
     print(global_variables)
 
 def get_common_words():
@@ -147,7 +147,7 @@ def get_common_words():
     # print(test_source, type(test_source))
     if(configuration.source == configuration.THESAURUS):
         print('TH')
-        common_words = openFile(os.path.join(os.path.dirname(os.path.abspath(__file__)), "static/20k.txt"))[:subset_common_words]
+        common_words = open_file(os.path.join(os.path.dirname(os.path.abspath(__file__)), "static/20k.txt"))[:subset_common_words]
         # print(common_words[:50])
         return common_words
     elif(configuration.source in (configuration.DATABASE, configuration.AI_MODEL)):
@@ -187,13 +187,13 @@ def make_analysis(text, global_variables):
     # ToDo: Set decorator to set Elapsed Time
     start = time.time()
     get_global_variables(global_variables)
-    checked_message = splitByParagraphs(text)
+    checked_message = split_by_paragraphs(text)
     set_results(global_variables, start)
     return checked_message
 
 def import_common_words():
     count = 0
-    #common_words = openFile(os.path.join(os.path.dirname(os.path.abspath(__file__)), "static/20k.txt"))[:2000]
+    #common_words = open_file(os.path.join(os.path.dirname(os.path.abspath(__file__)), "static/20k.txt"))[:2000]
     #for word in common_words:
     #    w = Word(word = word, is_common = True)
     #    w.save()

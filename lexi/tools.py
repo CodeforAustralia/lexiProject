@@ -1,10 +1,10 @@
-def openFile(txt_file_path):
+def open_file(txt_file_path):
     txtFile = open(txt_file_path, "r")
     mostCommonWords = txtFile.read().split(",")
     txtFile.close()
     return mostCommonWords
 
-def setElapsedTime (elapsed):
+def set_elapsed_time (elapsed):
     if elapsed > 60:
         elapsed /= 60
         if elapsed > 60:
