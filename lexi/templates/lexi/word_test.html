@@ -1,0 +1,26 @@
+{% extends 'lexi/base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row py-3">
+        <div class="col">
+            <h1 class="center-aligned">Test any word</h1>
+        </div>
+    </div>
+    <div class="row py-3">
+        <form action="{% url 'lexi:word test' %}" method="post" class="form-inline" style="margin: 0 auto;">
+            {% csrf_token %}
+            <div class="col">
+                <input type="text" name="word" placeholder="Type a word" class="form-control" value="{{ word }}">
+            </div>
+            <div class="col">
+                <button type="submit" class="btn btn-primary">Validate</button>
+            </div>
+        </form>
+    </div>
+    <div class="row py-3">
+        <div class="col">
+            <h2 class="center-aligned {{ result.result_class }}">{{ result.result }}</h2>
+        </div>
+    </div>
+</div>
+{% endblock content %}

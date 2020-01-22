@@ -56,7 +56,7 @@ def lookForSynonyms(word):
         synonyms.append(word + " has no synonyms that are common words.")
         return synonyms
         
-def lookForWord(word):
+def look_for_word(word):
     #ToDo: Include Keras text preprocessing for words with an character stick (i.e. ?)
     global mostCommonWords
     if word in mostCommonWords or re.findall("[0-9]", word):
@@ -68,7 +68,7 @@ def splitByWords(simpleSentence):
     words = simpleSentence.split(" ")
     for w in words:
         if (w not in ("", " ", "\n", "\r")):
-            whereIs = lookForWord(w.lower())
+            whereIs = look_for_word(w.lower())
             if whereIs != "common":
                 global uncommonWordsCounter
                 uncommonWordsCounter += 1
@@ -138,7 +138,7 @@ def set_results(global_variables, start):
     global_variables['elapsed_time'] = setElapsedTime(time.time() - start)
     print(global_variables)
 
-def getCommonWords():
+def get_common_words():
     configuration = Configuration.objects.all().first()
     global threshold, source, subset_common_words
     threshold = configuration.threshold
@@ -164,7 +164,7 @@ def getCommonWords():
 
 def get_global_variables(global_variables):
     global mostCommonWords
-    mostCommonWords = getCommonWords()
+    mostCommonWords = get_common_words()
     global url
     url = global_variables['url']
     print(global_variables)
@@ -175,7 +175,15 @@ def get_global_variables(global_variables):
     global suggestions
     suggestions = ''
 
-def makeAnalysis(text, global_variables):
+def validate_word(word, global_variables):
+    get_global_variables(global_variables)
+    result = look_for_word(word)
+    if result == 'common':
+        return {'result': 'Common word', 'result_class': 'text-success'}
+    else:
+        return {'result': 'Uncommon word', 'result_class': 'text-danger'}
+
+def make_analysis(text, global_variables):
     # ToDo: Set decorator to set Elapsed Time
     start = time.time()
     get_global_variables(global_variables)
