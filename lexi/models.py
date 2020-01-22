@@ -36,7 +36,6 @@ class Word(models.Model):
 
     def __str__(self):
         return self.word
-
-    # ToDo: Define the DB model to associate a suggestion for a uncommon word.
+        
     # ToDo: Check and create properly encapsulation.
     

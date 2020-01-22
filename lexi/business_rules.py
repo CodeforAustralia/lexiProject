@@ -58,7 +58,6 @@ def lookForSynonyms(word):
         
 def lookForWord(word):
     #ToDo: Include Keras text preprocessing for words with an character stick (i.e. ?)
-    #ToDo: Look for the index if the word is within the 20k most common words, to avoid check multiple times
     global mostCommonWords
     if word in mostCommonWords or re.findall("[0-9]", word):
         return "common"
