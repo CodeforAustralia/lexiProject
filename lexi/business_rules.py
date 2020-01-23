@@ -23,33 +23,42 @@ def look_for_synonyms(word):
         try:
             how_many_synonyms = 0
             content = urllib.request.urlopen( url + word)
-            data = content.read().decode('utf-8')
+            data = content.read()#.decode('utf-8')
             content.close()
             soup = BeautifulSoup(data, 'html.parser')
             results = soup.find_all("script")
             result = results[22].string #ToDo: Fix or improve this!
             json_txt = result.replace("window.INITIAL_STATE = ","").replace("};","}")
+            #if word in ['tonight','finish']: # ToDo: IMPORTANT!
+            #    print(result)
+            #    print(' ')
+            #    print(json_txt)
             structure = json.loads(json_txt)
             synonyms.clear()
             global mostCommonWords
             for synonym in structure['searchData']['tunaApiData']['posTabs']:
+                word_type = synonym['pos']
                 for term in synonym['synonyms']:
-                    if int(term['similarity']) == 100 and word in mostCommonWords:  #ToDo: Validate the in validation
-                        #synonyms.append(term['term'] + '<span class="badge badge-light">' + term['similarity'] + '</span>')
-                        synonyms.append(term['term'])
+                    if int(term['similarity']) == 100 and term['term'] in mostCommonWords:
+                        synonyms.append(term['term'] + ' <span class="badge badge-pill badge-warning">' + word_type + '</span>')
                         how_many_synonyms += 1
             if how_many_synonyms == 0:
                 synonyms.append("Not common synonyms.")
+            synonyms.sort()
             return synonyms
         except urllib.error.HTTPError as err:
+            print(f"{word} was not found. (Code: {err.code})")
             if err.code == 404:
-                print(word + " was not found.")
                 synonyms.append(word + " was not found at Thesaurus.")
                 return synonyms
             else:
                 raise
+        except json.decoder.JSONDecodeError as JSONerr:
+            print(f"Response content for '{word}' is not in the JSON format expected. Error: {JSONerr}")
+            synonyms.append(word + " was not found* at Thesaurus.")
+            return synonyms
         except Exception as e1:
-            print(f"There is an error in look_for_synonyms for {word}: {str(e1)}")
+            print(f"There is an error in look_for_synonyms for {word}. Error: {str(e1)}")
             synonyms.append(word + " was not found at Thesaurus.")
             return synonyms
     else:
@@ -72,7 +81,6 @@ def split_by_words(simpleSentence):
             if whereIs != "common":
                 global uncommonWordsCounter
                 uncommonWordsCounter += 1
-                print(w + " - (" + whereIs + ")")
                 if w.lower() not in words_looked_for:
                     words_looked_for.append(w.lower())
                     synonyms = look_for_synonyms(w.lower())
@@ -94,7 +102,6 @@ def split_by_words(simpleSentence):
     return checked_simple_sentence
 
 def split_by_simple_sentences(wholeSentence):
-    #print(wholeSentence)
     checked_whole_sentence = ""
     simpleSentences = wholeSentence.split(",")
     for ss in simpleSentences:
@@ -121,7 +128,6 @@ def set_results(global_variables, start):
     global commonWordsCounter, uncommonWordsCounter
     commonWordsPercentage = (commonWordsCounter/(commonWordsCounter + uncommonWordsCounter))
     global_variables['commonWordsPercentage'] = commonWordsPercentage * 100
-    print(commonWordsPercentage)
     global threshold
     global_variables['threshold'] = threshold * 100
     if commonWordsPercentage >= threshold:
@@ -136,7 +142,6 @@ def set_results(global_variables, start):
     global source
     global_variables['source'] = source
     global_variables['elapsed_time'] = set_elapsed_time(time.time() - start)
-    print(global_variables)
 
 def get_common_words():
     configuration = Configuration.objects.all().first()
@@ -144,21 +149,16 @@ def get_common_words():
     threshold = configuration.threshold
     source = configuration.get_source_description(configuration.source)
     subset_common_words = configuration.subset_common_words
-    # print(test_source, type(test_source))
     if(configuration.source == configuration.THESAURUS):
-        print('TH')
         common_words = open_file(os.path.join(os.path.dirname(os.path.abspath(__file__)), "static/20k.txt"))[:subset_common_words]
-        # print(common_words[:50])
         return common_words
     elif(configuration.source in (configuration.DATABASE, configuration.AI_MODEL)):
-        print('DB', 'AI')
         common_words = []
         db_words = Word.objects.all()
         if db_words.exists():
             for word in db_words.iterator():
                 common_words.append(word.word)
-        # print(list(common_words))
-        return list(common_words)
+        return common_words
     else:
         return None
 
@@ -167,7 +167,6 @@ def get_global_variables(global_variables):
     mostCommonWords = get_common_words()
     global url
     url = global_variables['url']
-    print(global_variables)
     global commonWordsCounter, uncommonWordsCounter
     commonWordsCounter = uncommonWordsCounter = 0
     global words_looked_for
