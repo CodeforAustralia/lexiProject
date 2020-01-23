@@ -33,9 +33,10 @@ class Word(models.Model):
     creation_datetime = models.DateTimeField(auto_now_add=True)
     creation_user = models.CharField(max_length=20, default='admin')   # ToDo: Change using the session user request.session['member_id']
     suggestions = models.ManyToManyField(to='self')
+    # ToDo: Add index to know which are the first n most common words. The index could come with the bulk load.
 
     def __str__(self):
         return self.word
-        
+
     # ToDo: Check and create properly encapsulation.
     
