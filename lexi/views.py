@@ -32,11 +32,13 @@ def analysis(request):
         })
 
 def word_test(request):
-    post = request.POST.copy()
-    word = post['word']
     result = {}
-    if word:
-        result = validate_word(word, global_variables)
+    word = ''
+    if request.POST.dict():
+        post = request.POST.copy()
+        word = post['word']
+        if word:
+            result = validate_word(word, global_variables)
     return render(request, 'lexi/word_test.html', {
         'word': word,
         'result': result,
